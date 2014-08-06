@@ -1,0 +1,56 @@
+html {
+  position: relative;
+  height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+}
+.sidebar {
+    position: fixed;
+    top: 60px;
+    bottom: 60px;
+    left: 10px;
+    padding: 10px 20px 10px 20px;
+
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    border-right: 1px solid #eee;
+    background-color: #f5f5f5;
+}
+
+.sidebar img {
+  padding: 5px 0 5px 0;
+}
+
+.main {
+  width:800px; 
+  height:566px;
+  top: 60px;
+  left: 280px;
+  right: 70px;
+  bottom: 60px;
+
+  position: fixed;
+}
+
+.main > img {
+  width: 100%;
+  position: absolute;
+}
+.main #wPaintArea {
+  position:absolute; 
+  width:800px; 
+  height:566px; 
+
+  z-index: 1000;
+}
+.toolbar {
+  text-align: center;
+  position: fixed;
+  bottom: 60px;
+  right: 10px;
+  height: 50px;
+  width: 50px;
+  background-color: black;
+}
+

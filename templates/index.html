@@ -1,20 +1,67 @@
 <!doctype html>
 
 <html>
-<head>
+<head lang="de">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Neulerchenfelderstrasse</title>
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  <!-- Jquery -->
+  <script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+  <script type="text/javascript" src="js/bootstrap.min.js" ></script>
+  <link rel=stylesheet type=text/css href="css/bootstrap.min.css">
+
+  <!-- jQuery UI -->
+  <script type="text/javascript" src="lib/jquery.ui.core.1.10.3.min.js"></script>
+  <script type="text/javascript" src="lib/jquery.ui.widget.1.10.3.min.js"></script>
+  <script type="text/javascript" src="lib/jquery.ui.mouse.1.10.3.min.js"></script>
+  <script type="text/javascript" src="lib/jquery.ui.draggable.1.10.3.min.js"></script>
+  
+  <!-- wColorPicker -->
+  <link rel="Stylesheet" type="text/css" href="lib/wColorPicker.min.css" />
+  <script type="text/javascript" src="lib/wColorPicker.min.js"></script>
+
+  <!-- wPaint -->
+  <link rel="Stylesheet" type="text/css" href="wPaint.min.css" />
+  <script type="text/javascript" src="wPaint.min.js"></script>
+  <script type="text/javascript" src="plugins/main/wPaint.menu.main.min.js"></script>
+  <script type="text/javascript" src="plugins/text/wPaint.menu.text.min.js"></script>
+  <script type="text/javascript" src="plugins/shapes/wPaint.menu.main.shapes.min.js"></script>
+  <script type="text/javascript" src="plugins/file/wPaint.menu.main.file.min.js"></script>
+
+  <!-- Custom -->
+  <script type="text/javascript" src="js/main.js" ></script>
+  <link rel=stylesheet type=text/css href="css/main.css">
+
+
+
 </head>
 <body>
   <!-- Fixed navbar -->
-  <div>
-    <ul>
-      <li><a href="#">Galerie</a></li>
-      <li><a href="#">Zeichnen</a></li>
-      <li><a href="#"></a>Infos</li>
-    </ul>
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Neulerchenfelderstraße</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Zeichnen</a></li>
+          <li><a href="#about">Galerie</a></li>
+          <li><a href="#contact">Infos</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
   </div>
-  {% include "partials/gallery.html" %}
+
+  <div class="container-fluid content">
+      {% include "partials/draw.html" %}
+  </div>
 
 </body>
 </html>

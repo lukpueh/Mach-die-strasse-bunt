@@ -2,10 +2,10 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, jsonify
 
 # create our little application :)
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 app.config.from_object(__name__)
 
 #####################
@@ -54,17 +54,48 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
 #############
 """ VIEWS """
 #############
 
 @app.route('/')
 def index():
-
-    db = get_db()
-    cur = db.execute('SELECT f, nummer FROM images ORDER BY f')
-    images = cur.fetchall()
+    images = query_db('SELECT f, file FROM images ORDER BY f')
     return render_template('index.html', images=images)
 
+@app.route('/changeimage', methods=['GET'])
+def change_image():
+
+    fileurl = ""
+    if request.method != 'GET':
+        # Error Handling
+        pass
+    else:
+        imageid = request.args.get('imageid')
+        image = query_db('SELECT file FROM images WHERE f = ?', [imageid], one=True)
+        if image is None:
+            # Error Handling
+            pass
+        else:
+            fileurl = url_for('static', filename='img/regular/' + image['file'] )
+
+    return jsonify(file = fileurl)
+
+@app.route('/savepainting', methods=['POST'])
+def save_painting():
+    if request.method != 'POST':
+        # Error Handling
+        pass
+    else:
+        print request.args.get('imageid')
+        print request.args.get('painting')
+        
 if __name__ == '__main__':
+
     app.run()

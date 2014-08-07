@@ -10,7 +10,7 @@ $(document).ready(function(){
 			.done(function(data){
 				var target = $("img.imageRegular");
 				target.attr("src", data.file);
-				target.attr("id", imageid);
+				target.data("imageid", imageid);
 			});
 	});
 
@@ -22,4 +22,31 @@ $(document).ready(function(){
     	menuHandle: false,
 	    menuOffsetLeft: 850,
   	});
+
+    /*
+     * Send painting
+     */
+
+     $("#saveimage").click(function(evt){
+     	//TODO:
+     	// make toDataUrl safer
+     	// perform some checks
+     	// 		is there an image?
+     	// 		is there a valid background?
+     	var c = $(".wPaint-canvas")[0];
+     	console.log(c);
+     	var painting = c.toDataURL();
+     	var imageid = $("img.imageRegular").data("imageid");
+     	
+
+     	$.post("/savepainting", {"imageid" : imageid, "painting" : painting })
+     		.done(function(data){
+     			//Give some feedback
+     			console.log("sent successfully, yeah!");
+     		})
+     		.fail(function(data){
+     			//Give some feedback
+     			console.log("couldn't send, oh nooo!");
+     		});
+     });
 });

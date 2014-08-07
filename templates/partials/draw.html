@@ -1,21 +1,26 @@
-<!-- Begin page content -->
-<div class="container">
-    <!-- Picture Overview -->
-    <div>
-        
-    </div>
+<!-- Picture Overview -->
+    <div class="sidebar">
 
-    <!-- Picture Canvas -->
-    <div>
-
-    </div>
-    <!-- Paint Canvas -->
-    <div>
+        {% for image in images %}
+             <div class="imageSmallContainer">
+                <img data-imageid="{{image.f}}" class="imageSmall" src="{{url_for('static', filename='img/small/' +image.file)}}" />
+            </div>
+        {% endfor %}
 
     </div>
+
+    <!-- Picture Content -->
+    <div class="main">
+        <!-- Picture -->
+        <!-- Paint Canvas -->
+
+        <img class="imageRegular" data-imageid="{{images[0].f}}" src="{{url_for('static', filename='img/regular/' +images[0].file)}}">
+
+        <div id="wPaintArea"></div>
+    </div>
+
     <!-- Toolbar and Save -->
-    <div>
-
+    <div class="toolbar">
+        <a id="saveimage" href="#">save</a>
     </div>
-</div>
-{% include "partials/street.html" %}
+<!-- {% include "partials/street.html" %} -->

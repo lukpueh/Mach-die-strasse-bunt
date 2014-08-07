@@ -2,7 +2,8 @@ drop table if exists images;
 create table images (
   id integer primary key autoincrement,
   f integer not null,
-  nummer interger not null
+  n interger not null,
+  file text not null
 );
 
 drop table if exists drawings;

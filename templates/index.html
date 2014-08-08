@@ -37,32 +37,21 @@
 
 </head>
 <body>
-  <!-- Fixed navbar -->
-  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Neulerchenfelderstraße</a>
-      </div>
-      <div class="collapse navbar-collapse">
+  <div class="container-fluid mainContainer">
+
+    <div id="navbarMain" class="row navbar navbar-default col-md-12" role="navigation">
         <ul class="nav navbar-nav">
           <li class="active"><a href="#">Zeichnen</a></li>
           <li><a href="#about">Galerie</a></li>
           <li><a href="#contact">Infos</a></li>
         </ul>
-      </div><!--/.nav-collapse -->
     </div>
-  </div>
 
-  <div class="container-fluid content">
-      {% include "partials/draw.html" %}
-  </div>
+    <div id="contentMain" class="row col-md-12">
+        {% include "partials/draw.html" %}
+    </div>
 
+  </div>
 </body>
 </html>
 

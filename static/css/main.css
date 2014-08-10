@@ -11,7 +11,6 @@ body {
 }
 
 #contentMain {
-  background-color: red;
   height: 550px;
 }
 
@@ -39,14 +38,13 @@ body {
 
 #imageContainer {
   height: inherit;
-  background-color: blue;
   padding: 0 50px 0 80px;
-
 }
 
 .imageRegular {
-  width: 100%;
-  height: auto;
+  position: absolute;
+  width: 700px;
+  height: 495px;
 }
 
 

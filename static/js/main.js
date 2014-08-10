@@ -14,39 +14,34 @@ $(document).ready(function(){
 			});
 	});
 
+    function saveImg(drawing) {
+      var _this = this;
+
+      var imageid = $("img#imageBackground").data("imageid");
+
+      var formData = new FormData();
+      formData.append("imageid", imageid);
+
+      $.ajax({
+        type: 'POST',
+        url: '/savedrawing',
+        dataType: 'json',
+        data: {drawing: drawing, imageid: imageid},
+        success: function (resp) {
+            console.log("profit");
+            }
+        });
+    }
 	/*
 	 * Initialize wPaint
 	 */
-   //  $('#imagePaint').wPaint({  
-   //  	menuOrientation: 'vertical',
-   //  	menuHandle: false,
-	  //   menuOffsetLeft: 850,
-  	// });
+    $('#imagePaint').wPaint({  
+        path:            '/wPaint/',
+        menuHandle:      false,               // setting to false will means menus cannot be dragged around
+        menuOrientation: 'vertical',       // menu alignment (horizontal,vertical)
+        menuOffsetLeft:  -50,                  // left offset of primary menu
+        menuOffsetTop:   0,
+        saveImg: saveImg
+  	});
 
-    /*
-     * Send painting
-     */
-
-//      $("#saveimage").click(function(evt){
-//      	//TODO:
-//      	// make toDataUrl safer
-//      	// perform some checks
-//      	// 		is there an image?
-//      	// 		is there a valid background?
-//      	var c = $(".wPaint-canvas")[0];
-//      	console.log(c);
-//      	var painting = c.toDataURL();
-//      	var imageid = $("img.imageBackground").data("imageid");
-     	
-
-//      	$.post("/savepainting", {"imageid" : imageid, "painting" : painting })
-//      		.done(function(data){
-//      			//Give some feedback
-//      			console.log("sent successfully, yeah!");
-//      		})
-//      		.fail(function(data){
-//      			//Give some feedback
-//      			console.log("couldn't send, oh nooo!");
-//      		});
-//      });
 });

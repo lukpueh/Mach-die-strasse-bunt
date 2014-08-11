@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html>
+<head lang="de">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neulerchenfelderstrasse</title>
+  <!-- Jquery -->
+  <script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+  <script type="text/javascript" src="js/bootstrap.min.js" ></script>
+  <link rel=stylesheet type=text/css href="css/bootstrap.min.css">
+
+  <!-- jQuery UI -->
+  <script type="text/javascript" src="wPaint/lib/jquery.ui.core.1.10.3.min.js"></script>
+  <script type="text/javascript" src="wPaint/lib/jquery.ui.widget.1.10.3.min.js"></script>
+  <script type="text/javascript" src="wPaint/lib/jquery.ui.mouse.1.10.3.min.js"></script>
+  <script type="text/javascript" src="wPaint/lib/jquery.ui.draggable.1.10.3.min.js"></script>
+  
+  <!-- wColorPicker -->
+  <link rel="Stylesheet" type="text/css" href="wPaint/lib/wColorPicker.min.css" />
+  <script type="text/javascript" src="wPaint/lib/wColorPicker.min.js"></script>
+
+  <!-- wPaint -->
+  <link rel="Stylesheet" type="text/css" href="wpaint/wPaint.min.css" />
+  <script type="text/javascript" src="wPaint/wPaint.min.js"></script>
+  <script type="text/javascript" src="wpaint/plugins/main/wPaint.menu.main.min.js"></script>
+  <script type="text/javascript" src="wpaint/plugins/text/wPaint.menu.text.min.js"></script>
+  <script type="text/javascript" src="wpaint/plugins/shapes/wPaint.menu.main.shapes.min.js"></script>
+  <script type="text/javascript" src="wpaint/plugins/file/wPaint.menu.main.file.min.js"></script>
+
+  <!-- Custom -->
+  <script type="text/javascript" src="js/main.js" ></script>
+  <link rel=stylesheet type=text/css href="css/main.css">
+
+
+
+</head>
+<body>
+  <div class="container-fluid mainContainer">
+
+    <div id="navbarMain" class="row navbar navbar-default col-md-12" role="navigation">
+        <ul class="nav navbar-nav">
+          <li><a href="{{ url_for('draw') }}">Zeichnen</a></li>
+          <li><a href="{{ url_for('gallery') }}">Galerie</a></li>
+          <li><a href="{{ url_for('info') }}">Infos</a></li>
+          <!-- only show if logged in -->
+          <li><a href="{{ url_for('admin') }}">Administration</a></li>
+
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+        </ul>
+    </div>
+
+<div id="contentMain" class="row col-md-12">
+    {% block body %}{% endblock %}
+</div>
+
+  </div>
+</body>
+</html>
+

@@ -30,15 +30,24 @@ body {
 #sidebarLeftImages {
   height: 500px;
   overflow-y: auto;
-}
-
-#sidebarLeftImages img {
-  margin: 5px 0 5px 0;
+  text-align: center;
 }
 
 #imageContainer {
   height: inherit;
   padding: 0 50px 0 80px;
+}
+
+.imageSmallContainer {
+  position: relative;
+  width: 200px;
+  height: 141px;
+}
+
+.imageSmall {
+  position: absolute;
+  width: inherit;
+  height: inherit;
 }
 
 .imageRegular {
@@ -47,7 +56,17 @@ body {
   height: 495px;
 }
 
+.saveBar {
+  position: absolute;
+  bottom: 0;
+  left: 50px;
+}
 
+/* Override Colorpicker Position */
+.wColorPicker {
+    left: 37px !important;
+    top: -152px !important;  
+}
 
 
 

@@ -1,5 +1,6 @@
 # all the imports
 import os
+import time
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
@@ -18,6 +19,9 @@ app.config.update(dict(
     DEBUG=True,
     SECRET_KEY='12345devel'
 ))
+
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/drawings/')
+
 
 app.config.from_envvar('NEULERCHENFELDERSTR_SETTINGS', silent=True)
 
@@ -54,6 +58,12 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
+def insert_db(query, args=()):
+    db = get_db()
+    db.cursor().execute(query, args)
+    db.commit()
+    # return if it worked
+
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
@@ -64,10 +74,39 @@ def query_db(query, args=(), one=False):
 """ VIEWS """
 #############
 
+
+
+@app.route('/draw')
+def draw():
+    images = query_db('SELECT id, file FROM images ORDER BY id')
+    return render_template('draw.html', images=images)
+
+@app.route('/gallery')
+def gallery():
+    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id WHERE is_approved = 1')
+    return render_template('gallery.html', drawings=drawings)
+
+@app.route('/info')
+def info():
+    return render_template('info.html')
+
+@app.route('/admin')
+def admin():
+    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id')
+    return render_template('admin.html', drawings=drawings)
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('draw'))
+
 @app.route('/')
 def index():
-    images = query_db('SELECT f, file FROM images ORDER BY f')
-    return render_template('index.html', images=images)
+    return redirect(url_for('draw'))
 
 @app.route('/changeimage', methods=['GET'])
 def change_image():
@@ -77,24 +116,40 @@ def change_image():
         # Error Handling
         pass
     else:
+        drawingid =  request.args.get('drawingid')
         imageid = request.args.get('imageid')
-        image = query_db('SELECT file FROM images WHERE f = ?', [imageid], one=True)
-        if image is None:
-            # Error Handling
-            pass
-        else:
-            fileurl = url_for('static', filename='img/regular/' + image['file'] )
 
-    return jsonify(file = fileurl)
+        print request.args
+        image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
+        res = {}
+        res["imagefile"] = url_for('static', filename='img/regular/' + image['file'] )
+        if (drawingid is not None):
+            # only show not approved drawings when logged in
 
-@app.route('/savepainting', methods=['POST'])
-def save_painting():
+            drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
+            res["drawingfile"] = url_for('static', filename='drawings/' + drawing['file'] )
+        return jsonify(res)
+
+@app.route('/savedrawing', methods=['POST'])
+def save_drawing():
     if request.method != 'POST':
         # Error Handling
         pass
     else:
-        print request.args.get('imageid')
-        print request.args.get('painting')
+        base64Str = request.form['drawing']
+        base64List = base64Str.split(',')
+        imageid = request.form['imageid']
+        if base64List[0] == 'data:image/png;base64' and base64List[1] > 0:
+            timestamp = time.time()
+            filename = str(timestamp).replace('.', '_')
+            with open(app.config['UPLOAD_FOLDER'] + filename, 'wb') as f:
+                f.write(base64List[1].decode('base64'))
+
+            insert_db('INSERT INTO drawings(file, ts_created, image) VALUES(?,?,?)', [filename, timestamp, imageid])
+
+
+
+    return jsonify(bla = "blub")
         
 if __name__ == '__main__':
 

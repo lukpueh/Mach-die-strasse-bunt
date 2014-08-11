@@ -1,26 +1,40 @@
-$(document).ready(function(){
+$(document).ready(function() {
 
 	/*
 	 * Change the image
 	 */
 	
 	$(".imageSmallContainer").click(function(evt){
-		var imageid = $(this).find("img.imageSmall").data("imageid");
-		$.get("/changeimage", { "imageid": imageid })
+
+    var imageid = $(this).data("imageid");
+    var drawingid = $(this).data("drawingid");
+    var ids = {imageid : imageid,
+               drawingid : drawingid};
+               
+		$.get("/changeimage", ids)
 			.done(function(data){
-				var target = $("img#imageBackground");
-				target.attr("src", data.file);
-				target.data("imageid", imageid);
+
+        var image = $("#imageTarget");
+
+        image.attr("src", data.imagefile);
+        image.data("imageid", imageid);
+
+        if (typeof drawingid != 'undefined') {
+            var drawing = $("#drawingTarget");
+            drawing.attr("src", data.drawingfile);
+            drawing.data("id", drawingid);
+          }
 			});
 	});
 
-    function saveImg(drawing) {
-      var _this = this;
 
-      var imageid = $("img#imageBackground").data("imageid");
-
-      var formData = new FormData();
-      formData.append("imageid", imageid);
+  /*
+   * Store drawing on server
+   */
+    
+    $("#saveDrawing").click(function(evt){
+      var drawing = $("#imagePaint").wPaint("image");
+      var imageid = $("#imageTarget").data("imageid");
 
       $.ajax({
         type: 'POST',
@@ -31,17 +45,5 @@ $(document).ready(function(){
             console.log("profit");
             }
         });
-    }
-	/*
-	 * Initialize wPaint
-	 */
-    $('#imagePaint').wPaint({  
-        path:            '/wPaint/',
-        menuHandle:      false,               // setting to false will means menus cannot be dragged around
-        menuOrientation: 'vertical',       // menu alignment (horizontal,vertical)
-        menuOffsetLeft:  -50,                  // left offset of primary menu
-        menuOffsetTop:   0,
-        saveImg: saveImg
-  	});
-
+    })
 });

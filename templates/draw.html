@@ -1,0 +1,47 @@
+{% extends "main.html" %}
+{% block body %}
+
+    <!-- Picture Content -->
+    <div id="imageContainer" class="col-sm-9 col-xs-12">
+        
+        <!-- Picture -->
+        <img id="imageTarget" class="imageRegular" data-imageid="{{images[0].id}}" src="{{url_for('static', filename='img/regular/' + images[0].file)}}">
+
+        <!-- Paint Canvas -->
+        <div id="imagePaint" class="imageRegular"></div>
+        <script type="text/javascript">
+          /*
+           * Initialize wPaint
+           */
+            $('#imagePaint').wPaint({  
+                path:            '/wPaint/',
+                menuHandle:      false,               // setting to false will means menus cannot be dragged around
+                menuOrientation: 'vertical',       // menu alignment (horizontal,vertical)
+                menuOffsetLeft:  -50,                  // left offset of primary menu
+                menuOffsetTop:   0,
+            });
+
+            $('.wPaint-menu-icon-name-save, .wPaint-menu-icon-name-loadBg').css('display', 'none');
+        </script>
+
+        <div class="saveBar">
+            <a id="saveDrawing" href="#">save</a>
+        </div>
+    </div>
+
+    <!-- Picture Overview -->
+
+    <div id="sidebarLeft" class="col-sm-3 col-xs-0">
+        <div id="sidebarLeftHeader">Click on an image to paint on it!</div>
+        <div id="sidebarLeftImages">
+        {% for image in images %}
+             <div class="imageSmallContainer draw" data-imageid="{{image.id}}">
+                <img class="imageSmall" src="{{url_for('static', filename='img/small/' + image.file)}}" />
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+

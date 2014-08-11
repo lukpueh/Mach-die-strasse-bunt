@@ -1,15 +1,13 @@
-
 {% extends "main.html" %}
 {% block body %}
-
-
     <!-- Picture Content -->
     <div id="imageContainer" class="col-sm-9 col-xs-12">
         
         <!-- Picture -->
         {% if drawings|length %}
-         <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
+            <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
             <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}">
+
         {% else %}
             <div>No drawings so far!</div>
         {% endif %}

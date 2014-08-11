@@ -1,9 +1,18 @@
 # all the imports
 import os
-import time
 import sqlite3
+from datetime import timedelta
+from time import time
+
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
+from flask_login import (LoginManager, login_required, login_user, 
+                         current_user, logout_user, UserMixin)
+from itsdangerous import URLSafeTimedSerializer
+from werkzeug.security import generate_password_hash, \
+     check_password_hash
+
+#http://thecircuitnerd.com/flask-login-tokens/
 
 # create our little application :)
 app = Flask(__name__, static_url_path='')
@@ -21,7 +30,10 @@ app.config.update(dict(
 ))
 
 app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/drawings/')
+app.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=14)
 
+login_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+login_manager = LoginManager()
 
 app.config.from_envvar('NEULERCHENFELDERSTR_SETTINGS', silent=True)
 
@@ -70,12 +82,63 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+
+#############
+""" MODEL """
+#############
+class User(UserMixin):
+    def __init__(self, shortname, name, password):
+        self.shortname = shortname
+        self.name = name
+        self.password = password
+ 
+    def get_auth_token(self):
+        data = [str(self.shortname), self.password]
+        return login_serializer.dumps(data)
+ 
+    @staticmethod
+    def get(name):
+        print "Whatuppp"
+        print name
+        user = query_db('SELECT shortname, name, password FROM users WHERE shortname = ?', [name], True)
+        if user is not None:
+            print user
+            return User(user['shortname'], user['name'], user['password'])
+        return None
+
+#############
+""" HELPERS """
+#############
+def hash_pass(password):
+    return generate_password_hash(password)
+
+def check_password(user, password):
+    return check_password_hash(user.password, password)
+
+@login_manager.user_loader
+def load_user(shortname):
+    return User.get(shortname)
+
+@login_manager.token_loader
+def load_token(token):
+
+    max_age = app.config["REMEMBER_COOKIE_DURATION"].total_seconds()
+    #Decrypt the Security Token, data = [username, hashpass] and get user
+    data = login_serializer.loads(token, max_age=max_age)
+    user = User.get(data[0])
+ 
+    #Check Password and return user or None
+    if user and check_password(user, data[1]):
+        return user
+    return None
+
+def create_user(shortname, name, password):
+    pw = hash_pass(password)
+    insert_db('INSERT INTO users (shortname, name, password) VALUES(?,?,?)', [shortname, name, pw])
+    
 #############
 """ VIEWS """
 #############
-
-
-
 @app.route('/draw')
 def draw():
     images = query_db('SELECT id, file FROM images ORDER BY id')
@@ -90,13 +153,21 @@ def gallery():
 def info():
     return render_template('info.html')
 
+
 @app.route('/admin')
+@login_required
 def admin():
     drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id')
     return render_template('admin.html', drawings=drawings)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        user = User.get(request.form['username'])        
+        if user and check_password(user, request.form['password']):
+            print "logged in"
+            login_user(user, remember=True)
+            return redirect(url_for(admin))
     return render_template('login.html')
 
 @app.route('/logout')
@@ -106,6 +177,7 @@ def logout():
 
 @app.route('/')
 def index():
+    create_user("luki", "Lukas Puehringer", 12345)
     return redirect(url_for('draw'))
 
 @app.route('/changeimage', methods=['GET'])
@@ -140,7 +212,7 @@ def save_drawing():
         base64List = base64Str.split(',')
         imageid = request.form['imageid']
         if base64List[0] == 'data:image/png;base64' and base64List[1] > 0:
-            timestamp = time.time()
+            timestamp = time()
             filename = str(timestamp).replace('.', '_')
             with open(app.config['UPLOAD_FOLDER'] + filename, 'wb') as f:
                 f.write(base64List[1].decode('base64'))
@@ -152,5 +224,6 @@ def save_drawing():
     return jsonify(bla = "blub")
         
 if __name__ == '__main__':
-
+    login_manager.login_view = "/login"
+    login_manager.setup_app(app)
     app.run()

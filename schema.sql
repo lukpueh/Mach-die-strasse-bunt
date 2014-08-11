@@ -17,10 +17,10 @@ create table drawings (
 	FOREIGN KEY(image) REFERENCES images(id)
 );
 
+
 drop table if exists admins;
-create table admins (
-	id integer primary key autoincrement,
-	shortname text not null,
+create table users (
+	shortname text primary key,
 	name text not null,
 	password text not null
 );

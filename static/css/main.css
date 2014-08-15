@@ -28,14 +28,25 @@ body {
 }
 
 #sidebarLeftImages {
-  height: 500px;
+  height: 450px;
   overflow-y: auto;
   text-align: center;
+}
+
+#sidebarLeftFooter {
+  padding-top: 20px;
+  height: 50px;
 }
 
 #imageContainer {
   height: inherit;
   padding: 0 50px 0 80px;
+}
+
+.imageSmallContainer {
+  position: relative;
+  width: 200px;
+  height: 150px;
 }
 
 .imageSmallContainer {

@@ -7,9 +7,6 @@
         {% if drawings|length %}
 	        <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
 	        <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}">
-	       	<div id="saveBar">
-	            <a id="saveDrawing" href="#">save</a>
-	        </div>
         {% else %}
             <div>No drawings so far!</div>
 
@@ -20,16 +17,28 @@
 
     <div id="sidebarLeft" class="col-sm-3 ">
     	{% if drawings|length %}
-        	<div id="sidebarLeftHeader">Click on an painting to paint on it!</div>
+        	<div id="sidebarLeftHeader">Click on an painting to make it big!</div>
+        <form action="{{ url_for('save_moderation') }}" method=post>
         {% endif %}
-        <div id="sidebarLeftImages">
-        {% for drawing in drawings %}
-             <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
-                <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
-                <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
+            <div id="sidebarLeftImages">
+            
+            {% for drawing in drawings %}
+                <div class="imageSmallContainerOuter">
+                     <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
+                        <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
+                        <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
+                    </div>
+                    <input type=checkbox  name=do_approve value="{{drawing.id}}" {{'%s' % 'checked' if drawing.is_approved }} />
+                </div>
+            {% endfor %}
+
             </div>
-        {% endfor %}
-        </div>
+        {% if drawings|length %}
+            <div id="sidebarLeftFooter">
+            <input type=submit value="Save Moderation">
+            </div>
+        </form>
+        {% endif %}        
     </div>
 
 

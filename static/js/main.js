@@ -13,7 +13,8 @@ $(document).ready(function() {
                
 		$.get("/changeimage", ids)
 			.done(function(data){
-
+        var imageContainer = $("#imageContainer");
+        imageContainer.css("opacity", "0.0");
         var image = $("#imageTarget");
 
         image.attr("src", data.imagefile);
@@ -24,6 +25,7 @@ $(document).ready(function() {
             drawing.attr("src", data.drawingfile);
             drawing.data("id", drawingid);
           }
+        imageContainer.animate({opacity: "1.0"}, 500);
 			});
 	});
 
@@ -46,4 +48,5 @@ $(document).ready(function() {
             }
         });
     })
+
 });

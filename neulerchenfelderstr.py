@@ -82,7 +82,6 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-
 #############
 """ MODEL """
 #############
@@ -95,14 +94,14 @@ class User(UserMixin):
     def get_auth_token(self):
         data = [str(self.shortname), self.password]
         return login_serializer.dumps(data)
+
+    def get_id(self):
+        return unicode(self.shortname)
  
     @staticmethod
     def get(name):
-        print "Whatuppp"
-        print name
         user = query_db('SELECT shortname, name, password FROM users WHERE shortname = ?', [name], True)
         if user is not None:
-            print user
             return User(user['shortname'], user['name'], user['password'])
         return None
 
@@ -126,6 +125,7 @@ def load_token(token):
     #Decrypt the Security Token, data = [username, hashpass] and get user
     data = login_serializer.loads(token, max_age=max_age)
     user = User.get(data[0])
+
  
     #Check Password and return user or None
     if user and check_password(user, data[1]):
@@ -165,19 +165,17 @@ def login():
     if request.method == 'POST':
         user = User.get(request.form['username'])        
         if user and check_password(user, request.form['password']):
-            print "logged in"
             login_user(user, remember=True)
-            return redirect(url_for(admin))
+            return redirect(url_for('admin'))
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
+    logout_user()
     return redirect(url_for('draw'))
 
 @app.route('/')
 def index():
-    create_user("luki", "Lukas Puehringer", 12345)
     return redirect(url_for('draw'))
 
 @app.route('/changeimage', methods=['GET'])
@@ -191,7 +189,6 @@ def change_image():
         drawingid =  request.args.get('drawingid')
         imageid = request.args.get('imageid')
 
-        print request.args
         image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
         res = {}
         res["imagefile"] = url_for('static', filename='img/regular/' + image['file'] )
@@ -222,6 +219,25 @@ def save_drawing():
 
 
     return jsonify(bla = "blub")
+
+@app.route('/savemoderation', methods=['POST'])
+def save_moderation():
+    if request.method != 'POST':
+        pass
+        # Error Hanlding
+    else:
+        to_approve = request.form.getlist("do_approve")
+        approved = query_db('SELECT id from drawings WHERE is_approved = 1')
+        to_disapprove = []
+        for drawing in approved:
+            if unicode(drawing['id']) not in to_approve:
+                print drawing['id']
+                to_disapprove.append(drawing['id'])
+        if len(to_approve):
+            insert_db('UPDATE drawings SET is_approved = 1 WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
+        if len(to_disapprove):
+            insert_db('UPDATE drawings SET is_approved = 0 WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
+    return redirect(url_for('admin'))
         
 if __name__ == '__main__':
     login_manager.login_view = "/login"

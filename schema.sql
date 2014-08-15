@@ -11,8 +11,8 @@ create table drawings (
 	id integer primary key autoincrement,
 	file text not null,
 	ts_created integer not null,
-	ts_approved integer default 0, 
-	is_approved integer,
+	ts_approved integer, 
+	is_approved integer default 0,
 	image integer,
 	FOREIGN KEY(image) REFERENCES images(id)
 );

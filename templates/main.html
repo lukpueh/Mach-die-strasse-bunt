@@ -45,9 +45,12 @@
           <li><a href="{{ url_for('gallery') }}">Galerie</a></li>
           <li><a href="{{ url_for('info') }}">Infos</a></li>
           <!-- only show if logged in -->
+          {% if current_user.is_authenticated() %}
           <li><a href="{{ url_for('admin') }}">Administration</a></li>
-
+          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
           <li><a href="{{ url_for('login') }}">Login</a></li>
+          {% endif %}
         </ul>
     </div>
 

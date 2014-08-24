@@ -2,7 +2,7 @@
 {% block body %}
 
     <!-- Picture Content -->
-    <div id="imageContainer" class="col-sm-9 col-xs-12">
+    <div id="imageContainer" >
         
         <!-- Picture -->
         <img id="imageTarget" class="imageRegular" data-imageid="{{images[0].id}}" src="{{url_for('static', filename='img/regular/' + images[0].file)}}">
@@ -31,9 +31,9 @@
 
     <!-- Picture Overview -->
 
-    <div id="sidebarLeft" class="col-sm-3 col-xs-12">
-        <div id="sidebarLeftHeader">Click on an image to paint on it!</div>
-        <div id="sidebarLeftImages">
+    <div id="sidebar">
+        <div id="sidebarHeader">Click on an image to paint on it!</div>
+        <div id="sidebarImages">
         {% for image in images %}
              <div class="imageSmallContainer draw" data-imageid="{{image.id}}">
                 <img class="imageSmall" src="{{url_for('static', filename='img/small/' + image.file)}}" />

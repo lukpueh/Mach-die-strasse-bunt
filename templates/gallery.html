@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block body %}
     <!-- Picture Content -->
-    <div id="imageContainer" class="col-sm-9 col-xs-12">
+    <div id="imageContainer">
         
         <!-- Picture -->
         {% if drawings|length %}
@@ -15,11 +15,11 @@
 
     <!-- Picture Overview -->
 
-    <div id="sidebarLeft" class="col-sm-3 ">
+    <div id="sidebar">
         {% if drawings|length %}
-            <div id="sidebarLeftHeader">Click on an painting to paint on it!</div>
+            <div id="sidebarHeader">Click on an painting to paint on it!</div>
         {% endif %}
-        <div id="sidebarLeftImages">
+        <div id="sidebarImages">
         {% for drawing in drawings %}
              <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
                 <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />

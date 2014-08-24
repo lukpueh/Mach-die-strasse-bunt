@@ -7,10 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Neulerchenfelderstrasse</title>
   <!-- Jquery -->
+
   <script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+<!-- 
   <script type="text/javascript" src="js/bootstrap.min.js" ></script>
   <link rel=stylesheet type=text/css href="css/bootstrap.min.css">
-
+ -->
   <!-- jQuery UI -->
   <script type="text/javascript" src="wPaint/lib/jquery.ui.core.1.10.3.min.js"></script>
   <script type="text/javascript" src="wPaint/lib/jquery.ui.widget.1.10.3.min.js"></script>
@@ -37,24 +39,24 @@
 
 </head>
 <body>
-  <div class="container-fluid mainContainer">
+  <div class="container">
 
-    <div id="navbarMain" class="row navbar navbar-default col-md-12" role="navigation">
-        <ul class="nav navbar-nav">
-          <li><a href="{{ url_for('draw') }}">Zeichnen</a></li>
-          <li><a href="{{ url_for('gallery') }}">Galerie</a></li>
-          <li><a href="{{ url_for('info') }}">Infos</a></li>
+    <div id="navbar">
+        <ul class="nav">
+          <li id="btnDraw"><a href="{{ url_for('draw') }}">Zeichnen</a></li>
+          <li id="btnGallery"><a href="{{ url_for('gallery') }}">Galerie</a></li>
+          <li id="btnInfo"><a href="{{ url_for('info') }}">Infos</a></li>
           <!-- only show if logged in -->
           {% if current_user.is_authenticated() %}
-          <li><a href="{{ url_for('admin') }}">Administration</a></li>
-          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+          <li id="btnAdmin"><a href="{{ url_for('admin') }}">Administration</a></li>
+          <li id="btnLogout"><a href="{{ url_for('logout') }}">Logout</a></li>
           {% else %}
-          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li id="btnLogin"><a href="{{ url_for('login') }}">Login</a></li>
           {% endif %}
         </ul>
     </div>
 
-<div id="contentMain" class="row col-md-12">
+<div class="content">
     {% block body %}{% endblock %}
 </div>
 

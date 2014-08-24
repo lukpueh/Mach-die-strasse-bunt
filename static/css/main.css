@@ -1,68 +1,107 @@
 html {
   height: 100%;
+  text-align: center;
+
 }
 body {
-  /* Margin bottom by footer height */
+  margin: 0;
 }
 
-.mainContainer {
+a {
+  text-decoration: none;
+}
+
+.container {
   overflow: hidden;
-  margin: 20px;
+  margin: 20px auto auto auto;
+  width: 1100px;
+  height: 650px;
+  border: 1px solid #eee;
+  background-image: url(../img/bg_main.png);
+  background-repeat: no-repeat;
 }
 
-#contentMain {
-  height: 550px;
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
-#sidebarLeft {
+#navbar {
+  height: 100px;
+  text-align: center;
+}
+
+.nav li {
+  display: inline-block;
+  height: 100px;
+  margin: 0 40px 0 40px;
+}
+.nav li a {
+  display: inline-block;
+  padding-top: 40px;
+  color: #FFFFFF;
+}
+.nav li a:hover {
+  color: #FFFFFA;
+}
+
+#btnDraw { background-image: url(../img/bg_btn_draw.png); width:163px;}
+#btnGallery {background-image: url(../img/bg_btn_gallery.png); width: 144px;}
+#btnInfo {background-image: url(../img/bg_btn_info.png); width:141px;}
+
+.content {
+  width: 100%;
+  height: 540px;
+  margin-top: 10px;
+}
+
+#sidebar {
   text-align: center;
   padding: 0;
   margin: 0;
   height: inherit;
+  width: 250px;
   border: 1px solid #eee;
+  float: right;
 
 }
-#sidebarLeftHeader {
-  min-height: 50px;
-  padding-top: 20px;
+#sidebarHeader {
+  min-height: 40px;
 }
 
-#sidebarLeftImages {
-  height: 450px;
+#sidebarImages {
+  height: 500px;
   overflow-y: auto;
   text-align: center;
 }
 
-#sidebarLeftFooter {
-  padding-top: 20px;
-  height: 50px;
-}
-
 #imageContainer {
+  float: left;
   height: inherit;
-  padding: 0 50px 0 80px;
+  width: 800px;
+  position: relative;
 }
 
 .imageSmallContainer {
-  position: relative;
-  width: 200px;
-  height: 150px;
-}
-
-.imageSmallContainer {
-  position: relative;
   width: 200px;
   height: 141px;
+  margin: 5px 0 5px 0;
+  position: relative;
 }
 
 .imageSmall {
   position: absolute;
   width: inherit;
   height: inherit;
+  top: 0;
+  left: 0;
 }
 
 .imageRegular {
   position: absolute;
+  top: 0;
+  left: 80px;
   width: 700px;
   height: 495px;
 }

@@ -9,25 +9,28 @@
             <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}">
 
         {% else %}
-            <div>No drawings so far!</div>
+            <div>Hier gibt es noch nichts zu sehen. </div>
         {% endif %}
     </div>
 
     <!-- Picture Overview -->
+    {% if drawings|length %}
 
-    <div id="sidebar">
-        {% if drawings|length %}
-            <div id="sidebarHeader">Click on an painting to paint on it!</div>
-        {% endif %}
+    <div id="sidebar" class="border">
+            <div id="sidebarHeader">Klicke auf ein Bild um es groß zu machen... </div>
         <div id="sidebarImages">
-        {% for drawing in drawings %}
-             <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
-                <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
-                <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
+        
+            {% for drawing in drawings %}
+            <div class="imageSmallContainerOuter">
+                 <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
+                    <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
+                    <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
+                </div>
             </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
+    {% endif %}
 
 
 {% endblock %}

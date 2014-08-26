@@ -29,12 +29,31 @@ $(document).ready(function() {
 			});
 	});
 
+  $(".imageSmallContainerOuter input").change(function(evt){
+      var container = $(this).parent();
+      var initial = container.data('initialstate');
+      var checked = $(this).prop('checked');
+
+      container.removeClass('notApproved');
+      container.removeClass('approved');
+      container.removeClass('changed');
+
+      if (checked && initial == 'approved')
+        container.addClass('approved');
+      else if ((checked && initial == 'notApproved') || (!checked && initial == 'approved'))
+        container.addClass('changed');
+      else if (!checked && initial == 'notApproved')
+        container.addClass('notApproved')
+
+
+
+    });
 
   /*
    * Store drawing on server
    */
     
-    $("#saveDrawing").click(function(evt){
+    $("#drawingSaveBtn").click(function(evt){
       var drawing = $("#imagePaint").wPaint("image");
       var imageid = $("#imageTarget").data("imageid");
 

@@ -24,20 +24,21 @@
             $('.wPaint-menu-icon-name-save, .wPaint-menu-icon-name-loadBg').css('display', 'none');
         </script>
 
-        <div class="saveBar">
-            <a id="saveDrawing" href="#">save</a>
-        </div>
+
+        <a id="drawingSaveBtn" href="#">Speichern</a>
     </div>
 
     <!-- Picture Overview -->
 
-    <div id="sidebar">
-        <div id="sidebarHeader">Click on an image to paint on it!</div>
+    <div id="sidebar" class="border">
+        <div id="sidebarHeader">Klicke auf ein Bild um darauf zu malen...</div>
         <div id="sidebarImages">
         {% for image in images %}
-             <div class="imageSmallContainer draw" data-imageid="{{image.id}}">
+        <div class="imageSmallContainerOuter">
+            <div class="imageSmallContainer draw" data-imageid="{{image.id}}">
                 <img class="imageSmall" src="{{url_for('static', filename='img/small/' + image.file)}}" />
             </div>
+        </div>
         {% endfor %}
         </div>
     </div>

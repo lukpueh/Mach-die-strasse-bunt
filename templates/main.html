@@ -41,17 +41,17 @@
 <body>
   <div class="container">
 
-    <div id="navbar">
+    <div id="navbar" class="border">
         <ul class="nav">
-          <li id="btnDraw"><a href="{{ url_for('draw') }}">Zeichnen</a></li>
-          <li id="btnGallery"><a href="{{ url_for('gallery') }}">Galerie</a></li>
-          <li id="btnInfo"><a href="{{ url_for('info') }}">Infos</a></li>
+          <li><a id="btnDraw" {% if request.path == '/draw' %}class="active"{% endif %} href="{{ url_for('draw') }}">Zeichnen</a></li>
+          <li><a id="btnGallery" {% if request.path == '/gallery' %}class="active"{% endif %} href="{{ url_for('gallery') }}">Galerie</a></li>
+          <li><a id="btnInfo" {% if request.path == '/info' %}class="active"{% endif %}href="{{ url_for('info') }}">Infos</a></li>
           <!-- only show if logged in -->
           {% if current_user.is_authenticated() %}
-          <li id="btnAdmin"><a href="{{ url_for('admin') }}">Administration</a></li>
-          <li id="btnLogout"><a href="{{ url_for('logout') }}">Logout</a></li>
+          <li><a id="btnAdmin" {% if request.path == '/admin' %}class="active"{% endif %} href="{{ url_for('admin') }}">Administration</a></li>
+          <li ><a id="btnLogout" href="{{ url_for('logout') }}">{{current_user.name}}, abmelden.</a></li>
           {% else %}
-          <li id="btnLogin"><a href="{{ url_for('login') }}">Login</a></li>
+          <li ><a id="btnLogin"  {% if request.path == '/login' %}class="active"{% endif %} href="{{ url_for('login') }}"></a></li>
           {% endif %}
         </ul>
     </div>

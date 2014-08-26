@@ -1,25 +1,46 @@
-html {
-  height: 100%;
-  text-align: center;
-
-}
-body {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
   margin: 0;
-}
-
-a {
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 100%;
+  vertical-align: baseline;
   text-decoration: none;
 }
 
 .container {
   overflow: hidden;
-  margin: 20px auto auto auto;
+  margin: 10px auto auto auto;
   width: 1100px;
-  height: 650px;
+  height: 100%;
   border: 1px solid #eee;
   background-image: url(../img/bg_main.png);
   background-repeat: no-repeat;
 }
+
+
+.textContainer {
+  position: relative;
+  height: inherit;
+}
+
+.textRotate {
+  -moz-transform: rotate(12deg);
+  -ms-transform: rotate(12deg);
+  -o-transform: rotate(12deg);
+  -webkit-transform: rotate(12deg);
+  transform: rotate(-12deg);
+
+  position: absolute;
+  left: 250px;
+  width: 360px;
+}
+
+.border {
+    box-shadow: 0px 3px 10px #888888;
+}
+
 
 ul {
     list-style-type: none;
@@ -28,27 +49,58 @@ ul {
 }
 
 #navbar {
-  height: 100px;
+  height: 110px;
   text-align: center;
+  position: relative;
+  margin-bottom: 10px;
+  padding-top:10px;
 }
 
-.nav li {
+.nav li, .nav li a  {
   display: inline-block;
   height: 100px;
-  margin: 0 40px 0 40px;
+  line-height: 100px;
+  background-repeat: no-repeat;
+
 }
-.nav li a {
-  display: inline-block;
-  padding-top: 40px;
-  color: #FFFFFF;
+.nav li {
+    margin: 0 40px 0 40px;
 }
-.nav li a:hover {
-  color: #FFFFFA;
+.nav li:last-of-type {
+  margin: 5px;
+  position: absolute;
+  right: 0;
+  top: 0; 
+  line-height: normal;
+
+}
+.nav li:last-of-type a {
+  color: black;
+  font-size: 0.4em;
+  line-height: normal;
 }
 
-#btnDraw { background-image: url(../img/bg_btn_draw.png); width:163px;}
-#btnGallery {background-image: url(../img/bg_btn_gallery.png); width: 144px;}
-#btnInfo {background-image: url(../img/bg_btn_info.png); width:141px;}
+.nav li a {
+  color: white;
+}
+
+
+a:visited {color: white;}
+
+
+:active#btnDraw, :hover#btnDraw, .active#btnDraw { background-image: url(../img/bg_btn_draw.png); width:163px;}
+:active#btnGallery, :hover#btnGallery, .active#btnGallery {background-image: url(../img/bg_btn_gallery.png); width: 144px;}
+:active#btnInfo, :hover#btnInfo, .active#btnInfo  {background-image: url(../img/bg_btn_info.png); width:141px;}
+:active#btnAdmin, :hover#btnAdmin, .active#btnAdmin {background-image: url(../img/bg_btn_admin.png); width:138px;}
+:active#btnLogin, :hover#btnLogin, .active#btnLogin  {background-image: url(../img/bg_btn_login.png);height: 47px; width: 30px;}
+
+#btnDraw { background-image: url(../img/bg_btn_draw_inactive.png); width:163px;}
+#btnGallery {background-image: url(../img/bg_btn_gallery_inactive.png); width: 144px;}
+#btnInfo {background-image: url(../img/bg_btn_info_inactive.png); width:141px;}
+#btnAdmin {background-image: url(../img/bg_btn_admin_inactive.png); width:138px;}
+#btnLogin {background-image: url(../img/bg_btn_login_inactive.png);height: 47px; width: 30px;}
+
+
 
 .content {
   width: 100%;
@@ -60,34 +112,67 @@ ul {
   text-align: center;
   padding: 0;
   margin: 0;
-  height: inherit;
-  width: 250px;
-  border: 1px solid #eee;
+  height: 495px;
+  width: 230px;
   float: right;
-
 }
 #sidebarHeader {
   min-height: 40px;
+  background: white;
+  line-height: 40px;
+  font-size: 0.7em;
 }
 
 #sidebarImages {
-  height: 500px;
+  height: 445px;
   overflow-y: auto;
-  text-align: center;
+  text-align: left;
 }
+
 
 #imageContainer {
   float: left;
   height: inherit;
   width: 800px;
   position: relative;
+  margin: 0 30px 0 30px;
+  text-align: center;
+}
+
+#drawingSaveBtn {
+  position: absolute;
+  bottom: 0px;
+  background-repeat: no-repeat;
+  line-height: 40px;
+  background-image: url(../img/bg_btn_save.png);height: 40px; width: 200px;
 }
 
 .imageSmallContainer {
-  width: 200px;
+  width: auto;
   height: 141px;
-  margin: 5px 0 5px 0;
   position: relative;
+}
+
+.imageSmallContainerOuter {
+  padding: 10px;
+}
+
+.imageSmallContainerOuter input {
+  width: 100%;
+}
+
+.imageSmallContainerOuter.approved  {
+  background-color: #5cb85c;
+}
+.imageSmallContainerOuter.notApproved  {
+  background-color: #d9534f;
+}
+.imageSmallContainerOuter.changed  {
+  background-color: #f0ad4e;
+}
+
+#adminSaveBtn {
+  margin-top: 20px;
 }
 
 .imageSmall {
@@ -104,12 +189,6 @@ ul {
   left: 80px;
   width: 700px;
   height: 495px;
-}
-
-.saveBar {
-  position: absolute;
-  bottom: 0;
-  left: 50px;
 }
 
 /* Override Colorpicker Position */

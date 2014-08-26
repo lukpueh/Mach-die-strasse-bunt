@@ -15,15 +15,15 @@
 
     <!-- Picture Overview -->
 
-    <div id="sidebar" >
+    <div id="sidebar" class="border" >
     	{% if drawings|length %}
-        	<div id="sidebarHeader">Click on an painting to make it big!</div>
+        	<div id="sidebarHeader">Klicke auf ein Bild um es groß zu machen...</div>
         <form action="{{ url_for('save_moderation') }}" method=post>
         {% endif %}
             <div id="sidebarImages">
             
             {% for drawing in drawings %}
-                <div class="imageSmallContainerOuter">
+                <div class="imageSmallContainerOuter {{'%s' % 'approved' if drawing.is_approved  else 'notApproved'}}" data-initialstate="{{'%s' % 'approved' if drawing.is_approved  else 'notApproved'}}">
                      <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
                         <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
                         <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
@@ -34,9 +34,9 @@
 
             </div>
         {% if drawings|length %}
-<!--             <div id="sidebarFooter">
-            <input type=submit value="Save Moderation">
-            </div> -->
+        <div id="sidebarFooter">
+            <input id="adminSaveBtn" type=submit value="Speichere Auswahl">
+        </div>
         </form>
         {% endif %}        
     </div>

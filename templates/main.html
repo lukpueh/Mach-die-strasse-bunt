@@ -34,6 +34,7 @@
   <!-- Custom -->
   <script type="text/javascript" src="js/main.js" ></script>
   <link rel=stylesheet type=text/css href="css/main.css">
+  <link rel=stylesheet type=text/css href="css/dialog.css">
 
 
 
@@ -56,11 +57,19 @@
         </ul>
     </div>
 
-<div class="content">
-    {% block body %}{% endblock %}
-</div>
-
+  <div class="content">
+      {% block body %}{% endblock %}
   </div>
+
+</div>
+<div id="dialog-overlay"></div>
+<div id="dialog-box">
+  <div class="dialog-content">
+    <div id="dialog-message"></div>
+    <a href="#" class="button">Speichern</a>
+    <a href="#" class="btn-ok button">Schließen</a>
+  </div>
+</div>
 </body>
 </html>
 

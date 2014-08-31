@@ -146,7 +146,7 @@ def draw():
 
 @app.route('/gallery')
 def gallery():
-    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id WHERE is_approved = 1')
+    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id WHERE is_approved = 1 ORDER BY ts_created DESC')
     return render_template('gallery.html', drawings=drawings)
 
 @app.route('/info')
@@ -157,7 +157,7 @@ def info():
 @app.route('/admin')
 @login_required
 def admin():
-    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id')
+    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id ORDER BY ts_created DESC')
     return render_template('admin.html', drawings=drawings)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -226,6 +226,7 @@ def save_moderation():
         pass
         # Error Hanlding
     else:
+        timestamp = time()
         to_approve = request.form.getlist("do_approve")
         approved = query_db('SELECT id from drawings WHERE is_approved = 1')
         to_disapprove = []
@@ -234,9 +235,9 @@ def save_moderation():
                 print drawing['id']
                 to_disapprove.append(drawing['id'])
         if len(to_approve):
-            insert_db('UPDATE drawings SET is_approved = 1 WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
+            insert_db('UPDATE drawings SET is_approved = 1, ts_approved = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
         if len(to_disapprove):
-            insert_db('UPDATE drawings SET is_approved = 0 WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
+            insert_db('UPDATE drawings SET is_approved = 0, ts_approved = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
     return redirect(url_for('admin'))
         
 if __name__ == '__main__':

@@ -139,12 +139,10 @@ a:visited {color: white;}
   text-align: center;
 }
 
-#drawingSaveBtn {
+#drawingDialogBtn {
   position: absolute;
-  bottom: 0px;
-  background-repeat: no-repeat;
-  line-height: 40px;
-  background-image: url(../img/bg_btn_save.png);height: 40px; width: 200px;
+  bottom: 0;
+  left: 80px;
 }
 
 .imageSmallContainer {
@@ -189,6 +187,38 @@ a:visited {color: white;}
   left: 80px;
   width: 700px;
   height: 495px;
+}
+
+
+.btn {
+  /* styles for button */
+/*  float: left;
+*/  margin:10px 10px 10px 0;
+  text-align:center;
+  background-color: #4E4E4E;
+  display: block;
+  padding: 5px 10px 6px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  line-height: 1;
+  
+  /* css3 implementation :) */
+  
+/*  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;*/
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+  border-bottom: 1px solid rgba(0,0,0,0.25);
+  
+  position: relative;
+  cursor: pointer;
+  
+}
+
+.btn:hover {
+  background-color: #101011;  
 }
 
 /* Override Colorpicker Position */

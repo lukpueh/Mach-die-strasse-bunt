@@ -1,3 +1,46 @@
+  /*
+   * Store drawing on server
+   */
+    
+  function saveDrawing() {
+
+    var drawing = $("#imagePaint").wPaint("image");
+    var imageid = $("#imageTarget").data("imageid");
+
+    $.ajax({
+      type: 'POST',
+      url: '/savedrawing',
+      dataType: 'json',
+      data: {drawing: drawing, imageid: imageid},
+      success: function (resp) {
+          popup("Das Bild wurde erfolgreich gespeichert.");
+          }
+      });
+  }
+
+  /*
+   * Popup message
+   */
+
+  function popup(message) {
+      
+    // get the screen height and width  
+    var maskHeight = $(document).height();  
+    var maskWidth = $(window).width();
+    
+    // calculate the values for center alignment
+    var dialogTop =  (maskHeight/2) - ($('#dialog-box').height()/2);  
+    var dialogLeft = (maskWidth/2) - ($('#dialog-box').width()/2); 
+    
+    // assign values to the overlay and dialog box
+    $('#dialog-overlay').css({height:maskHeight, width:maskWidth}).show();
+    $('#dialog-box').css({top:dialogTop, left:dialogLeft}).show();
+    
+    // display the message
+    $('#dialog-message').html(message);
+        
+  }
+
 $(document).ready(function() {
 
 	/*
@@ -29,6 +72,10 @@ $(document).ready(function() {
 			});
 	});
 
+  /*
+   * Change the class of moderated images
+   */
+
   $(".imageSmallContainerOuter input").change(function(evt){
       var container = $(this).parent();
       var initial = container.data('initialstate');
@@ -44,57 +91,20 @@ $(document).ready(function() {
         container.addClass('changed');
       else if (!checked && initial == 'notApproved')
         container.addClass('notApproved')
-
-
-
     });
 
-  /*
-   * Store drawing on server
-   */
-    
-  $("#drawingSaveBtn").click(function(evt){
-    popup("Die besten eingeschickten Zeichnungen werden als Freecard abgespeichert. \
-      Mit dem Klick auf den Speicherbutton erklärst du dich dafür bereit, dass dein Bild veröffentlicht wird.");
-    // var drawing = $("#imagePaint").wPaint("image");
-    // var imageid = $("#imageTarget").data("imageid");
-
-    // $.ajax({
-    //   type: 'POST',
-    //   url: '/savedrawing',
-    //   dataType: 'json',
-    //   data: {drawing: drawing, imageid: imageid},
-    //   success: function (resp) {
-    //       console.log("profit");
-    //       }
-    //   });
-  })
 
 
 
-  function popup(message) {
-      
-    // get the screen height and width  
-    var maskHeight = $(document).height();  
-    var maskWidth = $(window).width();
-    
-    // calculate the values for center alignment
-    var dialogTop =  (maskHeight/2) - ($('#dialog-box').height()/2);  
-    var dialogLeft = (maskWidth/2) - ($('#dialog-box').width()/2); 
-    
-    // assign values to the overlay and dialog box
-    $('#dialog-overlay').css({height:maskHeight, width:maskWidth}).show();
-    $('#dialog-box').css({top:dialogTop, left:dialogLeft}).show();
-    
-    // display the message
-    $('#dialog-message').html(message);
-        
-  }
-
-
-  $('a.btn-ok, #dialog-overlay').click(function () {   
+  $('a.btn-close, #dialog-overlay').click(function () {   
     $('#dialog-overlay, #dialog-box').hide();   
     return false;
   });
+
+  $("#drawingDialogBtn").click(function(evt){
+        popup("Die besten eingeschickten Zeichnungen werden als Freecard abgespeichert. \
+      Mit dem Klick auf den Speicherbutton erklärst du dich dafür bereit, dass dein Bild veröffentlicht wird. \
+      <a id='drawingSaveBtn' href='javascript:saveDrawing();' class='btn'>Speichern</a>");
+    });
 
 });

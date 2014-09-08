@@ -1,45 +1,49 @@
 {% extends "main.html" %}
 {% block body %}
-    <!-- Picture Content -->
-    <div id="imageContainer">
-        
-        <!-- Picture -->
-        {% if drawings|length %}
-	        <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
-	        <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}">
-        {% else %}
-            <div>No drawings so far!</div>
-
-        {% endif %}
-    </div>
-
-    <!-- Picture Overview -->
-
-    <div id="sidebar" class="border" >
-    	{% if drawings|length %}
-        	<div id="sidebarHeader">Klicke auf ein Bild um es groß zu machen...</div>
-        <form action="{{ url_for('save_moderation') }}" method=post>
-        {% endif %}
-            <div id="sidebarImages">
-            
-            {% for drawing in drawings %}
-                <div class="imageSmallContainerOuter {{'%s' % 'approved' if drawing.is_approved  else 'notApproved'}}" data-initialstate="{{'%s' % 'approved' if drawing.is_approved  else 'notApproved'}}">
-                     <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
-                        <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
-                        <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
-                    </div>
-                    <input type=checkbox  name=do_approve value="{{drawing.id}}" {{'%s' % 'checked' if drawing.is_approved }} />
-                </div>
-            {% endfor %}
-
+    {% if drawings|length %}
+        <!-- Picture Content -->
+        <div id="imageContainer">
+            <!-- Picture -->
+            <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
+            <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}">
+            <div id="adminImageContainerFooter" class="imageContainerFooter">
+                {% if drawings[0].creator_mail %}
+                <span>Eingesendet von: {{drawings[0].creator_mail}}</span> 
+                {% else %}
+                <span>Eingesendet von: Anonym</span>
+                {% endif %}
             </div>
-        {% if drawings|length %}
-        <div id="sidebarFooter">
-            <input id="adminSaveBtn" class="btn" type=submit value="Speichere Auswahl">
         </div>
-        </form>
-        {% endif %}        
-    </div>
+
+        <!-- Picture Overview -->
+        <div id="sidebar" class="border" >
+            <div id="sidebarHeader">Klicke auf ein Bild um es groß zu machen...</div>
+            <form action="{{ url_for('save_moderation') }}" method=post>
+                <div id="sidebarImages">
+                
+                {% for drawing in drawings %}
+                    <div class="imageSmallContainerOuter {{'%s' % 'approved' if drawing.is_approved  else 'notApproved'}}" data-initialstate="{{'%s' % 'approved' if drawing.is_approved  else 'notApproved'}}">
+                         <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
+                            <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
+                            <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
+                        </div>
+                        <input type=checkbox  name=do_approve value="{{drawing.id}}" {{'%s' % 'checked' if drawing.is_approved }} />
+                    </div>
+                {% endfor %}
+
+                </div>
+                <div id="sidebarFooter">
+                    <input id="adminSaveBtn" class="btn" type=submit value="Speichere Auswahl">
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <div class="textContainer">
+            <div class="textRotate">
+                <p>Momentan hat noch niemand etwas gezeichnet. Das heißt, mehr WERBUNG machen!! :)</p>
+            </div>
+        </div>
+    {% endif %}        
 
 
 {% endblock %}

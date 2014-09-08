@@ -11,14 +11,15 @@ create table drawings (
 	id integer primary key autoincrement,
 	file text not null,
 	ts_created integer not null,
-	ts_approved integer, 
+	ts_moderated integer, 
 	is_approved integer default 0,
+	creator_mail text,
 	image integer,
 	FOREIGN KEY(image) REFERENCES images(id)
 );
 
 
-drop table if exists admins;
+drop table if exists users;
 create table users (
 	shortname text primary key,
 	name text not null,

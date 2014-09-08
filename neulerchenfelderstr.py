@@ -50,6 +50,11 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
+def create_user(shortname, name, password):
+    with app.app_context():
+        pw = hash_pass(password)
+        insert_db('INSERT INTO users (shortname, name, password) VALUES(?,?,?)', [shortname, name, pw])
+
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -131,10 +136,6 @@ def load_token(token):
     if user and check_password(user, data[1]):
         return user
     return None
-
-def create_user(shortname, name, password):
-    pw = hash_pass(password)
-    insert_db('INSERT INTO users (shortname, name, password) VALUES(?,?,?)', [shortname, name, pw])
     
 #############
 """ VIEWS """
@@ -157,7 +158,7 @@ def info():
 @app.route('/admin')
 @login_required
 def admin():
-    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id ORDER BY ts_created DESC')
+    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile, d.creator_mail FROM drawings d INNER JOIN images i ON d.image = i.id ORDER BY ts_created DESC')
     return render_template('admin.html', drawings=drawings)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -191,12 +192,14 @@ def change_image():
 
         image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
         res = {}
-        res["imagefile"] = url_for('static', filename='img/regular/' + image['file'] )
+        res['imagefile'] = url_for('static', filename='img/regular/' + image['file'] )
         if (drawingid is not None):
             # only show not approved drawings when logged in
+            drawing = query_db('SELECT file, creator_mail FROM drawings WHERE id = ?', [drawingid], one=True)
+            res['drawingfile'] = url_for('static', filename='drawings/' + drawing['file'] )
 
-            drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
-            res["drawingfile"] = url_for('static', filename='drawings/' + drawing['file'] )
+            res['creatormail'] = drawing['creator_mail']
+
         return jsonify(res)
 
 @app.route('/savedrawing', methods=['POST'])
@@ -208,15 +211,15 @@ def save_drawing():
         base64Str = request.form['drawing']
         base64List = base64Str.split(',')
         imageid = request.form['imageid']
+        creatorMail = request.form['creatormail']
+        print type(creatorMail)
         if base64List[0] == 'data:image/png;base64' and base64List[1] > 0:
             timestamp = time()
             filename = str(timestamp).replace('.', '_')
             with open(app.config['UPLOAD_FOLDER'] + filename, 'wb') as f:
                 f.write(base64List[1].decode('base64'))
 
-            insert_db('INSERT INTO drawings(file, ts_created, image) VALUES(?,?,?)', [filename, timestamp, imageid])
-
-
+            insert_db('INSERT INTO drawings(file, ts_created, image, creator_mail) VALUES(?,?,?,?)', [filename, timestamp, imageid, creatorMail])
 
     return jsonify(bla = "blub")
 
@@ -235,9 +238,9 @@ def save_moderation():
                 print drawing['id']
                 to_disapprove.append(drawing['id'])
         if len(to_approve):
-            insert_db('UPDATE drawings SET is_approved = 1, ts_approved = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
+            insert_db('UPDATE drawings SET is_approved = 1, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
         if len(to_disapprove):
-            insert_db('UPDATE drawings SET is_approved = 0, ts_approved = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
+            insert_db('UPDATE drawings SET is_approved = 0, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
     return redirect(url_for('admin'))
         
 if __name__ == '__main__':

@@ -1,13 +1,20 @@
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+html, body {
   margin: 0;
   border: 0;
   padding: 0;
   background-color: transparent;
-  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-family: Impact, Charcoal, sans-serif;
+  letter-spacing: 1px;
   font-size: 100%;
   vertical-align: baseline;
   text-decoration: none;
 }
+
+a, button {text-decoration: none;}
+
+h1 {font-size: 1.3em;}
+h2 {font-size: 1.1em;}
+p {font-size: 0.7em;}
 
 .container {
   overflow: hidden;
@@ -33,6 +40,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   transform: rotate(-12deg);
 
   position: absolute;
+  top: 30px;
   left: 250px;
   width: 360px;
 }
@@ -100,8 +108,6 @@ a:visited {color: white;}
 #btnAdmin {background-image: url(../img/bg_btn_admin_inactive.png); width:138px;}
 #btnLogin {background-image: url(../img/bg_btn_login_inactive.png);height: 47px; width: 30px;}
 
-
-
 .content {
   width: 100%;
   height: 540px;
@@ -117,10 +123,11 @@ a:visited {color: white;}
   float: right;
 }
 #sidebarHeader {
-  min-height: 40px;
+  height: 30px;
+  padding-top: 10px;
   background: white;
-  line-height: 40px;
   font-size: 0.7em;
+  font-family:arial;
 }
 
 #sidebarImages {
@@ -128,7 +135,6 @@ a:visited {color: white;}
   overflow-y: auto;
   text-align: left;
 }
-
 
 #imageContainer {
   float: left;
@@ -139,10 +145,15 @@ a:visited {color: white;}
   text-align: center;
 }
 
-#drawingDialogBtn {
+.imageContainerFooter {
   position: absolute;
   bottom: 0;
   left: 80px;
+}
+.imageContainerFooter span {
+  display: inline-block;
+  padding-bottom: 10px;
+  font-size: 0.8em;
 }
 
 .imageSmallContainer {
@@ -152,7 +163,8 @@ a:visited {color: white;}
 }
 
 .imageSmallContainerOuter {
-  padding: 10px;
+  padding: 10px 8px 10px 8px;
+  margin-bottom: 5px;
 }
 
 .imageSmallContainerOuter input {
@@ -189,24 +201,36 @@ a:visited {color: white;}
   height: 495px;
 }
 
+#infoContainer img {
+  width: 70%;
+  float: right;
+  margin-top: 20px;
+}
+
+#footer {
+  font-size: 0.3em;
+  position: relative;
+  width: 100%;
+  height: 20px;
+  bottom: 0;
+}
+#footer span {
+  font-family:arial;
+  float: right;
+  margin: 5px 10px 0 0;
+}
+
 
 .btn {
-  /* styles for button */
-/*  float: left;
-*/  margin:10px 10px 10px 0;
+  margin:10px 10px 10px 0;
   text-align:center;
   background-color: #4E4E4E;
   display: block;
   padding: 5px 10px 6px;
   color: #fff;
-  text-decoration: none;
   font-weight: bold;
   line-height: 1;
   
-  /* css3 implementation :) */
-  
-/*  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;*/
   -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
   -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
   text-shadow: 0 -1px 1px rgba(0,0,0,0.25);

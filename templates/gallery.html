@@ -1,37 +1,36 @@
 {% extends "main.html" %}
 {% block body %}
-    <!-- Picture Content -->
-    <div id="imageContainer">
-        
-        <!-- Picture -->
-        {% if drawings|length %}
-            <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
-            <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}">
-
-        {% else %}
-            <div>Hier gibt es noch nichts zu sehen. </div>
-        {% endif %}
-    </div>
-
-    <!-- Picture Overview -->
     {% if drawings|length %}
-
-    <div id="sidebar" class="border">
-            <div id="sidebarHeader">Klicke auf ein Bild um es groß zu machen... </div>
-        <div id="sidebarImages">
-        
-            {% for drawing in drawings %}
-            <div class="imageSmallContainerOuter">
-                 <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
-                    <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
-                    <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
-                </div>
-            </div>
-            {% endfor %}
+        <!-- Picture Content -->
+        <div id="imageContainer">
+            <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
+            <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}"> 
         </div>
-    </div>
-    {% endif %}
 
+        <!-- Picture Overview -->
+        <div id="sidebar" class="border">
+            <div id="sidebarHeader">Klicke auf ein Bild um es groß zu machen... </div>
+            <div id="sidebarImages">
+            
+                {% for drawing in drawings %}
+                <div class="imageSmallContainerOuter">
+                     <div class="imageSmallContainer view" data-imageid="{{drawing.image}}" data-drawingid="{{drawing.id}}">
+                        <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
+                        <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="textContainer">
+            <div class="textRotate">
+                <p>Die Galerie ist momentan noch leer. Das kannst du ändern, indem du selber etwas 
+                <a href="{{ url_for('draw') }}">zeichnest.</a>
+                </p>
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}
 

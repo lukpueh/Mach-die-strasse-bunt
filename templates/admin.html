@@ -6,18 +6,11 @@
             <!-- Picture -->
             <img id="imageTarget" class="imageRegular" data-imageid="{{drawings[0].image}}" src="{{url_for('static', filename='img/regular/' + drawings[0].imagefile)}}">
             <img id="drawingTarget" class="imageRegular" data-drawingid="{{drawings[0].id}}" src="{{url_for('static', filename='drawings/' +drawings[0].file)}}">
-            <div id="adminImageContainerFooter" class="imageContainerFooter">
-                {% if drawings[0].creator_mail %}
-                <span>Eingesendet von: {{drawings[0].creator_mail}}</span> 
-                {% else %}
-                <span>Eingesendet von: Anonym</span>
-                {% endif %}
-            </div>
         </div>
 
         <!-- Picture Overview -->
         <div id="sidebar" class="border" >
-            <div id="sidebarHeader">Klicke auf ein Bild um es groß zu machen...</div>
+            <div id="sidebarHeader" class="border">Klicke auf ein Bild um es groß zu machen.</div>
             <form action="{{ url_for('save_moderation') }}" method=post>
                 <div id="sidebarImages">
                 
@@ -27,6 +20,8 @@
                             <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
                             <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
                         </div>
+                        <p class="imageDate">{{drawing.ts_created}}</p>
+                        <p class="creatorMail">{{drawing.creator_mail}}</p>
                         <input type=checkbox  name=do_approve value="{{drawing.id}}" {{'%s' % 'checked' if drawing.is_approved }} />
                     </div>
                 {% endfor %}

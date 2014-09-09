@@ -8,6 +8,10 @@
     var imageid = $("#imageTarget").data("imageid");
     var creatormail = $("input[name=creatorMail]").val();
 
+    //Add spinning wheel
+    var spin = $(document.createElement('div'));
+    spin.addClass('spin');
+    $('#dialog-content').html(spin);
 
     $.ajax({
       type: 'POST',
@@ -15,8 +19,12 @@
       dataType: 'json',
       data: {drawing: drawing, imageid: imageid, creatormail: creatormail},
       success: function (resp) {
-          popup("Das Bild wurde erfolgreich gespeichert. Es kann jedoch ein paar Tage dauern bis es in der Galerie angezeigt wird.");
-          }
+        popup("Das Bild wurde erfolgreich gespeichert. Es kann jedoch ein paar Tage dauern bis es in der Galerie angezeigt wird.");
+        },
+      fail: function(resp) {
+        popup("Das Bild konnte leider nicht gespeichert werden.")
+      }
+
       });
   }
 
@@ -39,7 +47,7 @@
     $('#dialog-box').css({top:dialogTop, left:dialogLeft}).show();
     
     // display the message
-    $('#dialog-message').html(message);
+    $('#dialog-content').html(message);
         
   }
 
@@ -85,14 +93,6 @@ $(document).ready(function() {
             drawing.data('id', drawingid);
           }
 
-        //For Admin change mail address
-        if ($('#adminImageContainerFooter').length > 0) {
-          if (data.creatormail != '')
-            $('#adminImageContainerFooter').html("<span>Eingesendet von: " + data.creatormail + "</span>");
-          else
-            $('#adminImageContainerFooter').html("<span>Eingesendet von: Anonym</span>");
-        }
-
         imageContainer.animate({opacity: '1.0'}, 500);
 			});
 	});
@@ -117,9 +117,6 @@ $(document).ready(function() {
       else if (!checked && initial == 'notApproved')
         container.addClass('notApproved')
     });
-
-
-
 
   $('#dialog-box .close, #dialog-overlay').click(function () {   
     $('#dialog-overlay, #dialog-box').hide();   

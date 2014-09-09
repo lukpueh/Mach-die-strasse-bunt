@@ -131,7 +131,6 @@ def load_token(token):
     data = login_serializer.loads(token, max_age=max_age)
     user = User.get(data[0])
 
- 
     #Check Password and return user or None
     if user and check_password(user, data[1]):
         return user
@@ -147,18 +146,17 @@ def draw():
 
 @app.route('/gallery')
 def gallery():
-    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id WHERE is_approved = 1 ORDER BY ts_created DESC')
+    drawings = query_db('SELECT d.id, d.file, d.is_approved, d.image, i.file AS imagefile FROM drawings d INNER JOIN images i ON d.image = i.id WHERE is_approved = 1 ORDER BY ts_created DESC')
     return render_template('gallery.html', drawings=drawings)
 
 @app.route('/info')
 def info():
     return render_template('info.html')
 
-
 @app.route('/admin')
 @login_required
 def admin():
-    drawings = query_db('SELECT d.id, d.file, d.ts_created, d.is_approved, d.image, i.file AS imagefile, d.creator_mail FROM drawings d INNER JOIN images i ON d.image = i.id ORDER BY ts_created DESC')
+    drawings = query_db('SELECT d.id, d.file, datetime(d.ts_created, \'unixepoch\', \'localtime\') AS ts_created, d.is_approved, d.image, i.file AS imagefile, d.creator_mail FROM drawings d INNER JOIN images i ON d.image = i.id ORDER BY ts_created DESC')
     return render_template('admin.html', drawings=drawings)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -168,6 +166,7 @@ def login():
         if user and check_password(user, request.form['password']):
             login_user(user, remember=True)
             return redirect(url_for('admin'))
+
     return render_template('login.html')
 
 @app.route('/logout')
@@ -183,31 +182,25 @@ def index():
 def change_image():
 
     fileurl = ""
-    if request.method != 'GET':
-        # Error Handling
-        pass
-    else:
+    res = {}
+
+    if request.method == 'GET':
         drawingid =  request.args.get('drawingid')
         imageid = request.args.get('imageid')
 
         image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
-        res = {}
         res['imagefile'] = url_for('static', filename='img/regular/' + image['file'] )
+
         if (drawingid is not None):
-            # only show not approved drawings when logged in
-            drawing = query_db('SELECT file, creator_mail FROM drawings WHERE id = ?', [drawingid], one=True)
+            drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
             res['drawingfile'] = url_for('static', filename='drawings/' + drawing['file'] )
 
-            res['creatormail'] = drawing['creator_mail']
-
         return jsonify(res)
+    # return some error
 
 @app.route('/savedrawing', methods=['POST'])
 def save_drawing():
-    if request.method != 'POST':
-        # Error Handling
-        pass
-    else:
+    if request.method == 'POST':
         base64Str = request.form['drawing']
         base64List = base64Str.split(',')
         imageid = request.form['imageid']
@@ -225,22 +218,23 @@ def save_drawing():
 
 @app.route('/savemoderation', methods=['POST'])
 def save_moderation():
-    if request.method != 'POST':
-        pass
-        # Error Hanlding
-    else:
+    if request.method == 'POST':
         timestamp = time()
         to_approve = request.form.getlist("do_approve")
         approved = query_db('SELECT id from drawings WHERE is_approved = 1')
         to_disapprove = []
+
+        # Disapprove drawings that are
         for drawing in approved:
             if unicode(drawing['id']) not in to_approve:
-                print drawing['id']
                 to_disapprove.append(drawing['id'])
+
+        # Update Database
         if len(to_approve):
             insert_db('UPDATE drawings SET is_approved = 1, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
         if len(to_disapprove):
             insert_db('UPDATE drawings SET is_approved = 0, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
+    
     return redirect(url_for('admin'))
         
 if __name__ == '__main__':

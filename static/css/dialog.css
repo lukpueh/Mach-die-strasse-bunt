@@ -39,18 +39,18 @@ http://www.queness.com/post/1696/create-a-beautiful-looking-custom-dialog-box-wi
 	display:none;
 }
 
-#dialog-box .dialog-content {
+#dialog-content {
 	/* style the content */
 	text-align:left; 
-	padding:10px; 
-	margin:100px 30px 0 60px;
-	color:#666; 
+	padding: 80px 50px 80px 70px;
+	height: 220px;
+	width: 280px;
 	font-family:arial;
 	font-size:11px; 
 }
 
-#dialog-box .dialog-content input {
-	width: 274px;
+#dialog-content input {
+	width: 265px;
 }
 
 #dialog-box .close {

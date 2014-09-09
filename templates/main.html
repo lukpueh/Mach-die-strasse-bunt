@@ -57,6 +57,21 @@
         </ul>
     </div>
 
+  <noscript>
+    <style type="text/css">
+      .content {display: none;}
+      .noScriptContent {display: block;}
+    </style>
+  </noscript>
+
+  <div class="noScriptContent">
+        <div class="textContainer">
+            <div class="textRotate">
+                <p>Diese Seite benötigt JavaScript. Bitte aktiviere es in deinen Browser Einstellungen. </p>
+            </div>
+        </div>
+  </div>
+
   <div class="content">
       {% block body %}{% endblock %}
   </div>
@@ -68,10 +83,7 @@
 </div>
 <div id="dialog-overlay"></div>
 <div id="dialog-box">
-    <div class="dialog-content">
-        <div id="dialog-message"></div>
-        
-    </div>
+    <div id="dialog-content"></div>
     <a href="#" class="close">schließen</a>
 </div>
 

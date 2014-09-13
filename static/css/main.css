@@ -3,7 +3,7 @@ html, body {
   border: 0;
   padding: 0;
   background-color: transparent;
-  font-family: Impact, Charcoal, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   letter-spacing: 1px;
   font-size: 100%;
   vertical-align: baseline;
@@ -11,10 +11,20 @@ html, body {
 }
 
 a, button {text-decoration: none;}
+a.nrm, a:visited.nrm, a:active.nrm{
+  color: black;
+  font-weight: bold;
+  font-style: normal;
+  text-decoration: underline;
+}
+
+a:hover.nrm, a:focus.nrm {
+  font-style: italic;
+}
 
 h1 {font-size: 1.3em;}
 h2 {font-size: 1.1em;}
-p {font-size: 0.7em;}
+p {font-size: 0.8em;}
 
 .container {
   overflow: hidden;
@@ -26,92 +36,11 @@ p {font-size: 0.7em;}
   background-repeat: no-repeat;
 }
 
-
-.textContainer {
-  position: relative;
-  height: inherit;
-}
-
-.textRotate {
-  -moz-transform: rotate(12deg);
-  -ms-transform: rotate(12deg);
-  -o-transform: rotate(12deg);
-  -webkit-transform: rotate(12deg);
-  transform: rotate(-12deg);
-
-  position: absolute;
-  top: 30px;
-  left: 250px;
-  width: 360px;
-}
-
-.border {
-    box-shadow: 0px 3px 10px #888888;
-}
-
-
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-#navbar {
-  height: 110px;
-  text-align: center;
-  position: relative;
-  margin-bottom: 10px;
-  padding-top:10px;
-}
-
-.nav li, .nav li a  {
-  display: inline-block;
-  height: 100px;
-  line-height: 100px;
-  background-repeat: no-repeat;
-
-}
-.nav li {
-    margin: 0 40px 0 40px;
-}
-.nav li:last-of-type {
-  margin: 5px;
-  position: absolute;
-  right: 0;
-  top: 0; 
-  line-height: normal;
-
-}
-.nav li:last-of-type a {
-  color: black;
-  font-size: 0.4em;
-  line-height: normal;
-}
-
-.nav li a {
-  color: white;
-}
-
-
-a:visited {color: white;}
-
-
-:active#btnDraw, :hover#btnDraw, .active#btnDraw { background-image: url(../img/bg_btn_draw.png); width:163px;}
-:active#btnGallery, :hover#btnGallery, .active#btnGallery {background-image: url(../img/bg_btn_gallery.png); width: 144px;}
-:active#btnInfo, :hover#btnInfo, .active#btnInfo  {background-image: url(../img/bg_btn_info.png); width:141px;}
-:active#btnAdmin, :hover#btnAdmin, .active#btnAdmin {background-image: url(../img/bg_btn_admin.png); width:138px;}
-:active#btnLogin, :hover#btnLogin, .active#btnLogin  {background-image: url(../img/bg_btn_login.png);height: 47px; width: 30px;}
-
-#btnDraw { background-image: url(../img/bg_btn_draw_inactive.png); width:163px;}
-#btnGallery {background-image: url(../img/bg_btn_gallery_inactive.png); width: 144px;}
-#btnInfo {background-image: url(../img/bg_btn_info_inactive.png); width:141px;}
-#btnAdmin {background-image: url(../img/bg_btn_admin_inactive.png); width:138px;}
-#btnLogin {background-image: url(../img/bg_btn_login_inactive.png);height: 47px; width: 30px;}
-
 .content {
   width: 100%;
   height: 540px;
-  margin-top: 10px;
+  margin: 10px 0 10px 0;
+
 }
 
 .noScriptContent {
@@ -121,27 +50,17 @@ a:visited {color: white;}
   display: none;
 }
 
-#sidebar {
-  text-align: center;
-  padding: 0;
-  margin: 0;
-  height: 495px;
-  width: 230px;
-  float: right;
-}
-#sidebarHeader {
-  height: 30px;
-  padding-top: 10px;
-  margin-bottom: 5px;
-  background: white;
-  font-size: 0.7em;
-  font-family:arial;
-}
-
-#sidebarImages {
-  height: 445px;
-  overflow-y: auto;
-  text-align: left;
+.textContainer {
+  -moz-transform: rotate(12deg);
+  -ms-transform: rotate(12deg);
+  -o-transform: rotate(12deg);
+  -webkit-transform: rotate(12deg);
+  transform: rotate(-12deg);
+  height: inherit;
+  position: relative;
+  top: 45px;
+  left: 250px;
+  width: 360px;
 }
 
 #imageContainer {
@@ -162,6 +81,111 @@ a:visited {color: white;}
   display: inline-block;
   padding-bottom: 10px;
   font-size: 0.8em;
+}
+
+.imageRegular {
+  position: absolute;
+  top: 0;
+  left: 80px;
+  width: 700px;
+  height: 495px;
+}
+
+#logos {
+  width: 70%;
+  float: right;
+  margin-top: 10px;
+}
+
+.border {
+    box-shadow: 0px 3px 10px #888888;
+}
+
+/* Navbar */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#navbar {
+  position: relative;
+  padding-top:5px;
+  height: 75px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.nav li, .nav li a  {
+  display: inline-block;
+  height: 70px;
+  width: 100px;
+  line-height: 70px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.nav li {
+    margin: 0 40px 0 40px;
+}
+.nav li a, 
+.nav li a:visited, 
+.nav li a:active, 
+.nav li a:hover, 
+.nav li a:focus {
+  color: white;
+  font-size: 0.9em;
+}
+
+.nav li:last-of-type {
+  margin: 5px;
+  position: absolute;
+  right: 0;
+  top: 0; 
+}
+.nav li:last-of-type a {
+  line-height: normal;
+  color: black;
+  font-size: 0.7em;
+  height: initial;
+}
+
+
+
+:active#btnDraw, :hover#btnDraw, .active#btnDraw { background-image: url(../img/bg_btn_draw.png);}
+:active#btnGallery, :hover#btnGallery, .active#btnGallery {background-image: url(../img/bg_btn_gallery.png);}
+:active#btnInfo, :hover#btnInfo, .active#btnInfo  {background-image: url(../img/bg_btn_info.png);}
+:active#btnAdmin, :hover#btnAdmin, .active#btnAdmin {background-image: url(../img/bg_btn_admin.png);}
+:active#btnLogin, :hover#btnLogin, .active#btnLogin  {background-image: url(../img/bg_btn_login.png);height: 47px; width: 30px;}
+
+#btnDraw { background-image: url(../img/bg_btn_draw_inactive.png);}
+#btnGallery {background-image: url(../img/bg_btn_gallery_inactive.png);}
+#btnInfo {background-image: url(../img/bg_btn_info_inactive.png);}
+#btnAdmin {background-image: url(../img/bg_btn_admin_inactive.png);}
+#btnLogin {background-image: url(../img/bg_btn_login_inactive.png);height: 47px; width: 30px;}
+
+
+/* Sidebar */
+#sidebar {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  height: 495px;
+  width: 230px;
+  float: right;
+}
+#sidebarHeader {
+  height: 50px;
+  display: table-cell;
+  vertical-align: middle;
+  margin-bottom: 5px;
+  background: white;
+  font-size: 0.7em;
+}
+
+#sidebarImages {
+  height: 445px;
+  overflow-y: auto;
+  text-align: left;
 }
 
 .imageSmallContainer {
@@ -202,31 +226,17 @@ a:visited {color: white;}
   left: 0;
 }
 
-.imageRegular {
-  position: absolute;
-  top: 0;
-  left: 80px;
-  width: 700px;
-  height: 495px;
-}
-
-#infoContainer img {
-  width: 70%;
-  float: right;
-  margin-top: 20px;
-}
-
+/* Footer */
 #footer {
-  font-size: 0.3em;
+  font-size: 0.7em;
   position: relative;
   width: 100%;
   height: 20px;
   bottom: 0;
 }
 #footer span {
-  font-family:arial;
   float: right;
-  margin: 5px 10px 0 0;
+  margin: 3px 10px 2px 0;
 }
 
 
@@ -260,6 +270,8 @@ a:visited {color: white;}
     top: -152px !important;  
 }
 
+
+/* Spinning Wheel */
 
 .spin {
     position: absolute;

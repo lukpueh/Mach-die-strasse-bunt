@@ -1,9 +1,12 @@
-# all the imports
+#####################
+""" IMPORTS """
+#####################
 import os
 import sqlite3
+import logging
+from logging.handlers import RotatingFileHandler
 from datetime import timedelta
 from time import time
-
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
 from flask_login import (LoginManager, login_required, login_user, 
@@ -12,30 +15,29 @@ from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, \
      check_password_hash
 
-#http://thecircuitnerd.com/flask-login-tokens/
-
-# create our little application :)
-app = Flask(__name__, static_url_path='')
-app.config.from_object(__name__)
-
 #####################
 """ CONFIGURATION """
 #####################
+
+app = Flask(__name__, static_url_path='')
+app.config.from_object(__name__)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'neulerchenfelderstr.db'),
     DEBUG=True,
-    SECRET_KEY='12345devel'
+    SECRET_KEY='12345devel',
+    UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
+    REMEMBER_COOKIE_DURATION=timedelta(days=14),
+    LOG_FILE=os.path.join(app.root_path, 'log/combined.log')
 ))
-
-app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/drawings/')
-app.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=14)
 
 login_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 login_manager = LoginManager()
 
-app.config.from_envvar('NEULERCHENFELDERSTR_SETTINGS', silent=True)
+# DON'T forget to set the envvar!!!
+app.config.from_envvar('NEULERCHENFELDERSTR_PROD_CFG', silent=True)
+
 
 ################
 """ DATABASE """
@@ -125,7 +127,6 @@ def load_user(shortname):
 
 @login_manager.token_loader
 def load_token(token):
-
     max_age = app.config["REMEMBER_COOKIE_DURATION"].total_seconds()
     #Decrypt the Security Token, data = [username, hashpass] and get user
     data = login_serializer.loads(token, max_age=max_age)
@@ -178,13 +179,15 @@ def logout():
 def index():
     return redirect(url_for('draw'))
 
+
 @app.route('/changeimage', methods=['GET'])
 def change_image():
+    """Receives an imageid and a drawing id. Returns the url of both.
+    If user is not logged in, only drawings that are approved are returned."""
 
     fileurl = ""
     res = {}
-
-    if request.method == 'GET':
+    try:
         drawingid =  request.args.get('drawingid')
         imageid = request.args.get('imageid')
 
@@ -192,20 +195,40 @@ def change_image():
         res['imagefile'] = url_for('static', filename='img/regular/' + image['file'] )
 
         if (drawingid is not None):
-            drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
+            if current_user.is_authenticated():
+                drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
+            else:
+                app.logger.warning("Unauthenticated wants unapproved image")
+                drawing = query_db('SELECT file FROM drawings WHERE is_approved = 1 AND id = ?', [drawingid], one=True)
             res['drawingfile'] = url_for('static', filename='drawings/' + drawing['file'] )
 
-        return jsonify(res)
-    # return some error
+    except Exception, e:
+        app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
+
+    return jsonify(res)
 
 @app.route('/savedrawing', methods=['POST'])
 def save_drawing():
-    if request.method == 'POST':
+    """Receives a base64 String (the drawing) and the email address of the drawer, 
+    validates them and saves them to DB."""
+
+    try:
         base64Str = request.form['drawing']
         base64List = base64Str.split(',')
+
+        # Limit it to 8 MB - above is a bit fishy
+        if len(base64List[1]) > 8388608:
+            app.logger.warning("%s base64 too long", request.remote_addr)
+            return jsonify(kind = "error")
+
         imageid = request.form['imageid']
         creatorMail = request.form['creatormail']
-        print type(creatorMail)
+
+        # Email addresses can't be so long
+        if len(creatorMail) > 254:
+            app.logger.warning("%s IP too long", request.remote_addr)
+            creatorMail = ""
+
         if base64List[0] == 'data:image/png;base64' and base64List[1] > 0:
             timestamp = time()
             filename = str(timestamp).replace('.', '_')
@@ -213,12 +236,19 @@ def save_drawing():
                 f.write(base64List[1].decode('base64'))
 
             insert_db('INSERT INTO drawings(file, ts_created, image, creator_mail) VALUES(?,?,?,?)', [filename, timestamp, imageid, creatorMail])
-
-    return jsonify(bla = "blub")
+    
+    except Exception, e:
+        app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
+        return jsonify(kind = "error")
+    else:
+        return jsonify(kind = "success")
 
 @app.route('/savemoderation', methods=['POST'])
+@login_required
 def save_moderation():
-    if request.method == 'POST':
+    """Updates the approved state (true or false) of drawings."""
+
+    try:
         timestamp = time()
         to_approve = request.form.getlist("do_approve")
         approved = query_db('SELECT id from drawings WHERE is_approved = 1')
@@ -234,10 +264,18 @@ def save_moderation():
             insert_db('UPDATE drawings SET is_approved = 1, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
         if len(to_disapprove):
             insert_db('UPDATE drawings SET is_approved = 0, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
-    
+    except Exception, e:
+        app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
+
     return redirect(url_for('admin'))
         
 if __name__ == '__main__':
     login_manager.login_view = "/login"
     login_manager.setup_app(app)
+
+    file_handler = RotatingFileHandler(app.config['LOG_FILE'])
+    file_handler.setLevel(logging.WARNING)
+    file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s in %(funcName)s: %(message)s'))
+    app.logger.addHandler(file_handler)
+
     app.run()

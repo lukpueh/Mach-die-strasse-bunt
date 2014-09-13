@@ -26,9 +26,9 @@ http://www.queness.com/post/1696/create-a-beautiful-looking-custom-dialog-box-wi
 
 
 #dialog-box {
-  background-image: url(../img/bg_dialog.png);
-  background-repeat: no-repeat;
-  background-size: contain;
+	background-image: url(../img/bg_dialog.png);
+	background-repeat: no-repeat;
+	background-size: contain;
 	/* styling of the dialog box, i have a fixed dimension for this demo */ 
 	height: 380px;
 	width: 400px;
@@ -45,8 +45,9 @@ http://www.queness.com/post/1696/create-a-beautiful-looking-custom-dialog-box-wi
 	padding: 80px 50px 80px 70px;
 	height: 220px;
 	width: 280px;
-	font-family:arial;
-	font-size:11px; 
+	font-size:11pt; 
+	display: table-cell;
+	vertical-align: middle;
 }
 
 #dialog-content input {

@@ -49,8 +49,8 @@
           <li><a id="btnInfo" {% if request.path == '/info' %}class="active"{% endif %}href="{{ url_for('info') }}">Infos</a></li>
           <!-- only show if logged in -->
           {% if current_user.is_authenticated() %}
-          <li><a id="btnAdmin" {% if request.path == '/admin' %}class="active"{% endif %} href="{{ url_for('admin') }}">Administration</a></li>
-          <li ><a id="btnLogout" href="{{ url_for('logout') }}">{{current_user.name}} abmelden</a></li>
+          <li><a id="btnAdmin" {% if request.path == '/admin' %}class="active"{% endif %} href="{{ url_for('admin') }}">Admin</a></li>
+          <li ><a class="nrm" href="{{ url_for('logout') }}">{{current_user.name}} abmelden</a></li>
           {% else %}
           <li ><a id="btnLogin"  {% if request.path == '/login' %}class="active"{% endif %} href="{{ url_for('login') }}"></a></li>
           {% endif %}
@@ -66,9 +66,7 @@
 
   <div class="noScriptContent">
         <div class="textContainer">
-            <div class="textRotate">
-                <p>Diese Seite benötigt JavaScript. Bitte aktiviere es in deinen Browser Einstellungen. </p>
-            </div>
+            <p>Diese Seite benötigt JavaScript. Bitte aktiviere es in deinen Browser Einstellungen. </p>
         </div>
   </div>
 
@@ -77,14 +75,14 @@
   </div>
   <div id="footer" class="border">
     <span>
-        created by <a id="mailLink">Lukas P</a>
+        copyright <a href="#" class="nrm" id="mailLink">Lukas P</a>
     </span>
   </div>
 </div>
 <div id="dialog-overlay"></div>
 <div id="dialog-box">
     <div id="dialog-content"></div>
-    <a href="#" class="close">schließen</a>
+    <a href="#" class="close nrm">schließen</a>
 </div>
 
 </body>

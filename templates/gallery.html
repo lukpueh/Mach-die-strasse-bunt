@@ -24,11 +24,9 @@
         </div>
     {% else %}
         <div class="textContainer">
-            <div class="textRotate">
-                <p>Die Galerie ist momentan noch leer. Das kannst du ändern, indem du selber etwas 
-                <a href="{{ url_for('draw') }}">zeichnest.</a>
-                </p>
-            </div>
+            <p>Die Galerie ist momentan noch leer. Das kannst du ändern, indem du selber etwas 
+            <a class="nrm" href="{{ url_for('draw') }}">zeichnest.</a>
+            </p>
         </div>
     {% endif %}
 

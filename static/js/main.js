@@ -19,13 +19,15 @@
       dataType: 'json',
       data: {drawing: drawing, imageid: imageid, creatormail: creatormail},
       success: function (resp) {
-        popup("Das Bild wurde erfolgreich gespeichert. Es kann jedoch ein paar Tage dauern bis es in der Galerie angezeigt wird.");
-        },
-      fail: function(resp) {
-        popup("Das Bild konnte leider nicht gespeichert werden.")
+        if (resp.kind == 'success')
+          popup("<p>Die Zeichnung wurde erfolgreich gespeichert.</p><p>Sie wird jedoch zuerst überprüft bevor sie in der Galerie zu sehen ist.</p>");
+        if (resp.kind == 'error')
+          popup("<p>Die Zeichnung konnte leider nicht gespeichert werden.</p><p>Der Fehler wird untersucht.</p>");
+      },
+      fail: function() {
+        popup("<p>Die Zeichnung konnte leider nicht gespeichert werden.</p><p>Der Fehler wird untersucht.</p>");
       }
-
-      });
+    });
   }
 
   /*
@@ -124,11 +126,10 @@ $(document).ready(function() {
   });
 
   $('#drawingDialogBtn').click(function(evt){
-        popup("Aus den besten eingeschickten Zeichnungen werden Freecards gedruckt. \
-      Mit dem Klick auf den Speicherbutton erklärst du dich dafür bereit, dass dein Bild vielleicht veröffentlicht wird. \
-      Wenn du deine Emailadresse angibst, können wir dich informieren, falls wir deine Zeichnung ausgewählt haben. \
-      <p>Email:</p> \
-      <input type=text name=creatorMail> \
+        popup("<p>Aus den besten eingeschickten Zeichnungen werden Freecards gedruckt.</p> \
+      <p>Mit dem Klick auf den Speicherbutton erklärst du dich dafür bereit, dass dein Bild vielleicht veröffentlicht wird.</p> \
+      <p>Wenn du deine Emailadresse angibst, können wir dich informieren, falls wir deine Zeichnung ausgewählt haben.</p> \
+      <input type='text' name='creatorMail' placeholder='Email Adresse'> \
       <a id='drawingSaveBtn' href='javascript:saveDrawing();' class='btn'>Speichern</a>");
     });
 

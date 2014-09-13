@@ -20,8 +20,8 @@
                             <img  class="imageSmall" src="{{url_for('static', filename='img/small/' + drawing.imagefile)}}" />
                             <img  class="imageSmall" src="{{url_for('static', filename='drawings/' + drawing.file)}}" />
                         </div>
-                        <p class="imageDate">{{drawing.ts_created}}</p>
-                        <p class="creatorMail">{{drawing.creator_mail}}</p>
+                        <p>Am: {{drawing.ts_created}}</p>
+                        <p>Von: {{drawing.creator_mail}}</p>
                         <input type=checkbox  name=do_approve value="{{drawing.id}}" {{'%s' % 'checked' if drawing.is_approved }} />
                     </div>
                 {% endfor %}
@@ -34,9 +34,7 @@
         </div>
     {% else %}
         <div class="textContainer">
-            <div class="textRotate">
-                <p>Momentan hat noch niemand etwas gezeichnet. Das heißt, mehr WERBUNG machen!! :)</p>
-            </div>
+            <p>Momentan hat noch niemand etwas gezeichnet. Das heißt, mehr WERBUNG machen!! :)</p>
         </div>
     {% endif %}        
 

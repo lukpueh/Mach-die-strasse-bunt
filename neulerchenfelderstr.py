@@ -32,11 +32,21 @@ app.config.update(dict(
     LOG_FILE=os.path.join(app.root_path, 'log/combined.log')
 ))
 
+# Login Config
 login_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 login_manager = LoginManager()
+login_manager.login_view = "/login"
+login_manager.setup_app(app)
+
+# Logger
+file_handler = RotatingFileHandler(app.config['LOG_FILE'])
+file_handler.setLevel(logging.WARNING)
+file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s in %(funcName)s: %(message)s'))
+app.logger.addHandler(file_handler)
 
 # DON'T forget to set the envvar!!!
 app.config.from_envvar('NEULERCHENFELDERSTR_PROD_CFG', silent=True)
+
 
 
 ################
@@ -270,12 +280,4 @@ def save_moderation():
     return redirect(url_for('admin'))
         
 if __name__ == '__main__':
-    login_manager.login_view = "/login"
-    login_manager.setup_app(app)
-
-    file_handler = RotatingFileHandler(app.config['LOG_FILE'])
-    file_handler.setLevel(logging.WARNING)
-    file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s in %(funcName)s: %(message)s'))
-    app.logger.addHandler(file_handler)
-
     app.run()

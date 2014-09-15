@@ -102,7 +102,7 @@ $(document).ready(function() {
           }
 
         imageContainer.imagesLoaded( function() {
-          spin.remove()
+          spin.remove();
           imageContainer.children('.imageRegular').fadeIn();
         });
 			});

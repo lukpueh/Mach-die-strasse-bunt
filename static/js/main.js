@@ -1,3 +1,6 @@
+var emptySrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
+
+
   /*
    * Store drawing on server
    */
@@ -88,9 +91,8 @@ $(document).ready(function() {
         var spin = $(document.createElement('div'));
         spin.addClass('spin');
 
-        var emptySrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
         image.attr('src', emptySrc);
-        
+
         imageContainer.children('.imageRegular').hide();
         imageContainer.prepend(spin);
 

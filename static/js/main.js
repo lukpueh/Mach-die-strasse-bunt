@@ -15,7 +15,7 @@
 
     $.ajax({
       type: 'POST',
-      url: '/savedrawing',
+      url: 'savedrawing',
       dataType: 'json',
       data: {drawing: drawing, imageid: imageid, creatormail: creatormail},
       success: function (resp) {
@@ -79,7 +79,7 @@ $(document).ready(function() {
     var ids = {imageid : imageid,
                drawingid : drawingid};
                
-		$.get('/changeimage', ids)
+		$.get('changeimage', ids)
 			.done(function(data){
         var imageContainer = $('#imageContainer');
         imageContainer.css('opacity', '0.0');
@@ -95,7 +95,9 @@ $(document).ready(function() {
             drawing.data('id', drawingid);
           }
 
-        imageContainer.animate({opacity: '1.0'}, 500);
+        imageContainer.imagesLoaded( function() {
+          imageContainer.animate({opacity: '1.0'}, 250);
+        });
 			});
 	});
 
@@ -128,7 +130,7 @@ $(document).ready(function() {
   $('#drawingDialogBtn').click(function(evt){
         popup("<p>Aus den besten eingeschickten Zeichnungen werden Freecards gedruckt.</p> \
       <p>Mit dem Klick auf den Speicherbutton erklärst du dich dafür bereit, dass dein Bild vielleicht veröffentlicht wird.</p> \
-      <p>Wenn du deine Emailadresse angibst, können wir dich informieren, falls wir deine Zeichnung ausgewählt haben.</p> \
+      <p>Wenn du deine Email-Adresse angibst können wir dich informieren falls wir deine Zeichnung ausgewählt haben.</p> \
       <input type='text' name='creatorMail' placeholder='Email Adresse'> \
       <a id='drawingSaveBtn' href='javascript:saveDrawing();' class='btn'>Speichern</a>");
     });

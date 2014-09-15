@@ -51,10 +51,10 @@ p {font-size: 0.8em;}
 }
 
 .textContainer {
-  -moz-transform: rotate(12deg);
-  -ms-transform: rotate(12deg);
-  -o-transform: rotate(12deg);
-  -webkit-transform: rotate(12deg);
+  -moz-transform: rotate(-12deg);
+  -ms-transform: rotate(-12deg);
+  -o-transform: rotate(-12deg);
+  -webkit-transform: rotate(-12deg);
   transform: rotate(-12deg);
   height: inherit;
   position: relative;
@@ -274,7 +274,6 @@ ul {
 /* Spinning Wheel */
 
 .spin {
-    position: absolute;
     width: inherit;
     height: inherit;
     background-image: url('../img/spin.gif');

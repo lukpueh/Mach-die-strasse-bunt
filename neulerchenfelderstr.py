@@ -25,7 +25,7 @@ app.config.from_object(__name__)
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'neulerchenfelderstr.db'),
-    DEBUG=True,
+    DEBUG=False,
     SECRET_KEY='12345devel',
     UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
     REMEMBER_COOKIE_DURATION=timedelta(days=14),
@@ -150,6 +150,20 @@ def load_token(token):
 #############
 """ VIEWS """
 #############
+@app.errorhandler(500)
+def internal_server_error(e):
+    app.logger.error("%s: Internal Error: %s", request.remote_addr, str(e))
+    return render_template('500.html'), 500
+
+@app.errorhandler(404)
+def page_not_found(e):
+    app.logger.error("%s: Page Not Found: %s", request.remote_addr, str(e))
+    return render_template('404.html'), 404
+
+@app.route('/')
+def index():
+    return redirect(url_for('draw'))
+
 @app.route('/draw')
 def draw():
     images = query_db('SELECT id, file FROM images ORDER BY id')
@@ -185,11 +199,6 @@ def logout():
     logout_user()
     return redirect(url_for('draw'))
 
-@app.route('/')
-def index():
-    return redirect(url_for('draw'))
-
-
 @app.route('/changeimage', methods=['GET'])
 def change_image():
     """Receives an imageid and a drawing id. Returns the url of both.
@@ -208,7 +217,6 @@ def change_image():
             if current_user.is_authenticated():
                 drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
             else:
-                app.logger.warning("Unauthenticated wants unapproved image")
                 drawing = query_db('SELECT file FROM drawings WHERE is_approved = 1 AND id = ?', [drawingid], one=True)
             res['drawingfile'] = url_for('static', filename='drawings/' + drawing['file'] )
 
@@ -258,24 +266,22 @@ def save_drawing():
 def save_moderation():
     """Updates the approved state (true or false) of drawings."""
 
-    try:
-        timestamp = time()
-        to_approve = request.form.getlist("do_approve")
-        approved = query_db('SELECT id from drawings WHERE is_approved = 1')
-        to_disapprove = []
+    timestamp = time()
+    to_approve = request.form.getlist("do_approve")
+    approved = query_db('SELECT id from drawings WHERE is_approved = 1')
+    to_disapprove = []
 
-        # Disapprove drawings that are
-        for drawing in approved:
-            if unicode(drawing['id']) not in to_approve:
-                to_disapprove.append(drawing['id'])
+    # Disapprove drawings that are
+    for drawing in approved:
+        if unicode(drawing['id']) not in to_approve:
+            to_disapprove.append(drawing['id'])
 
-        # Update Database
-        if len(to_approve):
-            insert_db('UPDATE drawings SET is_approved = 1, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
-        if len(to_disapprove):
-            insert_db('UPDATE drawings SET is_approved = 0, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
-    except Exception, e:
-        app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
+    # Update Database
+    if len(to_approve):
+        insert_db('UPDATE drawings SET is_approved = 1, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
+    if len(to_disapprove):
+        insert_db('UPDATE drawings SET is_approved = 0, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
+
 
     return redirect(url_for('admin'))
         

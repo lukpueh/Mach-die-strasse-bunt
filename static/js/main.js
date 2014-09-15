@@ -82,19 +82,21 @@ $(document).ready(function() {
 		$.get('changeimage', ids)
 			.done(function(data){
         var imageContainer = $('#imageContainer');
+        var image = $('#imageTarget');
 
         //Add spinning wheel
         var spin = $(document.createElement('div'));
         spin.addClass('spin');
-        imageContainer.children('.imageRegular').hide();
+
+        var emptySrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
+        image.attr('src', emptySrc);
         
+        imageContainer.children('.imageRegular').hide();
         imageContainer.prepend(spin);
-        var image = $('#imageTarget');
 
         //Image Load fires incorrectly in FF
         //Replace Image with empty image so at least it doesn't flickr
-        var emptySrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
-        image.attr('src', emptySrc);
+
         image.attr('src', data.imagefile);
         image.data('imageid', imageid);
 

@@ -25,7 +25,7 @@ app.config.from_object(__name__)
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'neulerchenfelderstr.db'),
-    DEBUG=False,
+    DEBUG=True,
     SECRET_KEY='12345devel',
     UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
     REMEMBER_COOKIE_DURATION=timedelta(days=14),
@@ -276,11 +276,14 @@ def save_moderation():
         if unicode(drawing['id']) not in to_approve:
             to_disapprove.append(drawing['id'])
 
-    # Update Database
-    if len(to_approve):
-        insert_db('UPDATE drawings SET is_approved = 1, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 0 AND ' + ' OR '.join(["id=" + str(i) for i in to_approve]))
-    if len(to_disapprove):
-        insert_db('UPDATE drawings SET is_approved = 0, ts_moderated = ' + str(timestamp) + ' WHERE is_approved = 1 AND ' + ' OR '.join(["id=" + str(i) for i in to_disapprove]))
+    len_to_approve = len(to_approve)
+    len_to_disapprove = len(to_disapprove)
+
+    # Update Database (injection safe :))
+    if len_to_approve:
+        insert_db('UPDATE drawings SET is_approved = 1, ts_moderated = ? WHERE is_approved = 0 AND ' + ' OR '.join(['id = ?'] * len_to_approve), [str(timestamp)] + to_approve)
+    if len_to_disapprove:
+        insert_db('UPDATE drawings SET is_approved = 0, ts_moderated = ? WHERE is_approved = 1 AND ' + ' OR '.join(['id = ?'] * len_to_disapprove), [str(timestamp)] + to_disapprove)
 
 
     return redirect(url_for('admin'))

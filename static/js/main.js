@@ -82,7 +82,13 @@ $(document).ready(function() {
 		$.get('changeimage', ids)
 			.done(function(data){
         var imageContainer = $('#imageContainer');
-        imageContainer.css('opacity', '0.0');
+
+        //Add spinning wheel
+        var spin = $(document.createElement('div'));
+        spin.addClass('spin');
+        imageContainer.children('.imageRegular').hide();
+        
+        imageContainer.prepend(spin);
         var image = $('#imageTarget');
 
         image.attr('src', data.imagefile);
@@ -96,7 +102,8 @@ $(document).ready(function() {
           }
 
         imageContainer.imagesLoaded( function() {
-          imageContainer.animate({opacity: '1.0'}, 250);
+          spin.remove()
+          imageContainer.children('.imageRegular').fadeIn();
         });
 			});
 	});

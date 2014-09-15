@@ -1,6 +1,3 @@
-var emptySrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
-
-
   /*
    * Store drawing on server
    */
@@ -85,32 +82,39 @@ $(document).ready(function() {
 		$.get('changeimage', ids)
 			.done(function(data){
         var imageContainer = $('#imageContainer');
-        var image = $('#imageTarget');
+
+        //Hide all images in container
+        imageContainer.children('.imageRegular').hide();
 
         //Add spinning wheel
         var spin = $(document.createElement('div'));
         spin.addClass('spin');
-
-        image.attr('src', emptySrc);
-
-        imageContainer.children('.imageRegular').hide();
         imageContainer.prepend(spin);
 
-        //Image Load fires incorrectly in FF
-        //Replace Image with empty image so at least it doesn't flickr
+        //Remove hidden old image
+        $('#imageTarget').remove();
 
-        image.attr('src', data.imagefile);
-        image.data('imageid', imageid);
+        //Create new hidden image
+        var imageNew = $(document.createElement('img'));
+        imageNew.attr('id', 'imageTarget');
+        imageNew.addClass('imageRegular');
+        imageNew.attr('data-imageid', imageid);
+        imageNew.attr('src', data.imagefile);
+        imageNew.css('display', 'none');
+
+        //Prepend new Image to container
+        imageContainer.prepend(imageNew);
 
         //For Admin and Gallery also change Drawing
         if (typeof drawingid != 'undefined') {
             var drawing = $('#drawingTarget');
-            drawing.attr('src', emptySrc);
             drawing.attr('src', data.drawingfile);
-            drawing.data('id', drawingid);
+            drawing.attr('drawingid', drawingid);
           }
 
-        imageContainer.imagesLoaded( function() {
+        // If newImage src is loaded, remove spin and fade all imgs
+        // Fires too early in FF
+        imageContainer.imagesLoaded(function() {
           spin.remove();
           imageContainer.children('.imageRegular').fadeIn();
         });

@@ -1,11 +1,11 @@
-html, body {
+html, body, div, p, h1, h2, span {
   margin: 0;
   border: 0;
   padding: 0;
   background-color: transparent;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   letter-spacing: 1px;
-  font-size: 100%;
+  font-size: 15px;
   vertical-align: baseline;
   text-decoration: none;
 }
@@ -22,9 +22,9 @@ a:hover.nrm, a:focus.nrm {
   font-style: italic;
 }
 
-h1 {font-size: 1.3em;}
-h2 {font-size: 1.1em;}
-p {font-size: 0.8em;}
+h1 {font-size: 1.3em; margin: 13px 0px;}
+h2 {font-size: 1.1em; margin: 14px 0px;}
+p {font-size: 0.8em; margin: 10px 0px;}
 
 .container {
   overflow: hidden;
@@ -229,7 +229,6 @@ ul {
 
 /* Footer */
 #footer {
-  font-size: 0.7em;
   position: relative;
   width: 100%;
   height: 20px;
@@ -238,6 +237,7 @@ ul {
 #footer span {
   float: right;
   margin: 3px 10px 2px 0;
+  font-size: 0.7em;
 }
 
 

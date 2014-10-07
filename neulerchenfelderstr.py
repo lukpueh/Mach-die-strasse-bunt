@@ -292,26 +292,25 @@ def save_moderation():
 @app.route('/getfile', methods=['GET'])
 @login_required
 def get_file():
+    try:
+        drawingid = request.args.get('drawingid')
+        imageid = request.args.get('imageid')
 
-    # try:
-    drawingid = request.args.get('drawingid')
-    imageid = request.args.get('imageid')
+        image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
+        drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
 
-    image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
-    drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
+        with Image(filename='static/img/regular/' + image['file'] ) as img:
+            with Image(filename='static/drawings/' + drawing['file']) as drw:
+                img.resize(700, 495)
+                img.composite(drw, left=0, top=0)
+                body = img.make_blob()
 
-    with Image(filename='static/img/regular/' + image['file'] ) as img:
-        with Image(filename='static/drawings/' + drawing['file']) as drw:
-            img.resize(700, 495)
-            img.composite(drw, left=0, top=0)
-            body = img.make_blob()
-            
-    resp =  make_response(body)
-    resp.headers['Content-Disposition'] = "attachment; filename=%s.png" % drawing['file']
-    return resp
+        resp =  make_response(body)
+        resp.headers['Content-Disposition'] = "attachment; filename=%s.png" % drawing['file']
+        return resp
 
-    # except Exception, e:
-    #     app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
+    except Exception, e:
+        app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
 
         
 if __name__ == '__main__':

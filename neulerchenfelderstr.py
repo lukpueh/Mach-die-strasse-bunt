@@ -29,7 +29,7 @@ app.config.update(dict(
     DEBUG=True,
     SECRET_KEY='12345devel',
     UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
-    IMAGE_FOLDER=os.path.join(app.root_path, 'img/regular/'),
+    IMAGE_FOLDER=os.path.join(app.root_path, 'static/img/regular/'),
     REMEMBER_COOKIE_DURATION=timedelta(days=14),
     LOG_FILE=os.path.join(app.root_path, 'log/combined.log')
 ))

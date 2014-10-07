@@ -1,57 +1,67 @@
-  /*
-   * Store drawing on server
-   */
-    
-  function saveDrawing() {
+/*
+ * Store drawing on server
+ */
+  
+function saveDrawing() {
 
-    var drawing = $("#imagePaint").wPaint("image");
-    var imageid = $("#imageTarget").data("imageid");
-    var creatormail = $("input[name=creatorMail]").val();
+  var drawing = $('#imagePaint').wPaint('image');
+  var imageid = $('#imageTarget').data('imageid');
+  var creatormail = $('input[name=creatorMail]').val();
 
-    //Add spinning wheel
-    var spin = $(document.createElement('div'));
-    spin.addClass('spin');
-    $('#dialog-content').html(spin);
+  //Add spinning wheel
+  var spin = $(document.createElement('div'));
+  spin.addClass('spin');
+  $('#dialog-content').html(spin);
 
-    $.ajax({
-      type: 'POST',
-      url: 'savedrawing',
-      dataType: 'json',
-      data: {drawing: drawing, imageid: imageid, creatormail: creatormail},
-      success: function (resp) {
-        if (resp.kind == 'success')
-          popup("<p>Die Zeichnung wurde erfolgreich gespeichert.</p><p>Sie wird jedoch zuerst überprüft bevor sie in der Galerie zu sehen ist.</p>");
-        if (resp.kind == 'error')
-          popup("<p>Die Zeichnung konnte leider nicht gespeichert werden.</p><p>Der Fehler wird untersucht.</p>");
-      },
-      fail: function() {
+  $.ajax({
+    type: 'POST',
+    url: 'savedrawing',
+    dataType: 'json',
+    data: {drawing: drawing, imageid: imageid, creatormail: creatormail},
+    success: function (resp) {
+      if (resp.kind == 'success')
+        popup("<p>Die Zeichnung wurde erfolgreich gespeichert.</p><p>Sie wird jedoch zuerst überprüft bevor sie in der Galerie zu sehen ist.</p>");
+      if (resp.kind == 'error')
         popup("<p>Die Zeichnung konnte leider nicht gespeichert werden.</p><p>Der Fehler wird untersucht.</p>");
-      }
-    });
-  }
+    },
+    fail: function() {
+      popup("<p>Die Zeichnung konnte leider nicht gespeichert werden.</p><p>Der Fehler wird untersucht.</p>");
+    }
+  });
+}
 
-  /*
-   * Popup message
-   */
+function saveDrawingLocal() {
 
-  function popup(message) {
+    var imageid = $('img#imageTarget').data('imageid');
+    var drawingid = $('img#drawingTarget').data('drawingid');
+
+    window.location.href = 'getfile?drawingid=' + drawingid + '&imageid=' + imageid;
+}
+
+/*
+ * Popup message
+ */
+
+function popup(message) {
+    
+  // get the screen height and width  
+  var maskHeight = $(document).height();  
+  var maskWidth = $(window).width();
+  
+  // calculate the values for center alignment
+  var dialogTop =  (maskHeight/2) - ($('#dialog-box').height()/2);  
+  var dialogLeft = (maskWidth/2) - ($('#dialog-box').width()/2); 
+  
+  // assign values to the overlay and dialog box
+  $('#dialog-overlay').css({height:maskHeight, width:maskWidth}).show();
+  $('#dialog-box').css({top:dialogTop, left:dialogLeft}).show();
+  
+  // display the message
+  $('#dialog-content').html(message);
       
-    // get the screen height and width  
-    var maskHeight = $(document).height();  
-    var maskWidth = $(window).width();
-    
-    // calculate the values for center alignment
-    var dialogTop =  (maskHeight/2) - ($('#dialog-box').height()/2);  
-    var dialogLeft = (maskWidth/2) - ($('#dialog-box').width()/2); 
-    
-    // assign values to the overlay and dialog box
-    $('#dialog-overlay').css({height:maskHeight, width:maskWidth}).show();
-    $('#dialog-box').css({top:dialogTop, left:dialogLeft}).show();
-    
-    // display the message
-    $('#dialog-content').html(message);
-        
-  }
+}
+
+
 
 $(document).ready(function() {
 
@@ -78,7 +88,8 @@ $(document).ready(function() {
     var drawingid = $(this).data('drawingid');
     var ids = {imageid : imageid,
                drawingid : drawingid};
-               
+
+
 		$.get('changeimage', ids)
 			.done(function(data){
         var imageContainer = $('#imageContainer');
@@ -99,6 +110,7 @@ $(document).ready(function() {
         imageNew.attr('id', 'imageTarget');
         imageNew.addClass('imageRegular');
         imageNew.attr('data-imageid', imageid);
+        imageNew.data('imageid', imageid);
         imageNew.attr('src', data.imagefile);
         imageNew.css('display', 'none');
 
@@ -109,6 +121,8 @@ $(document).ready(function() {
         if (typeof drawingid != 'undefined') {
             var drawing = $('#drawingTarget');
             drawing.attr('src', data.drawingfile);
+            drawing.attr('data-drawingid', drawingid);
+            drawing.data('drawingid', drawingid);
             drawing.attr('drawingid', drawingid);
           }
 

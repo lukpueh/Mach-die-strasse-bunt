@@ -8,12 +8,13 @@ from logging.handlers import RotatingFileHandler
 from datetime import timedelta
 from time import time
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash, jsonify
+     render_template, flash, jsonify, make_response
 from flask_login import (LoginManager, login_required, login_user, 
                          current_user, logout_user, UserMixin)
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, \
      check_password_hash
+from wand.image import Image
 
 #####################
 """ CONFIGURATION """
@@ -287,6 +288,31 @@ def save_moderation():
 
 
     return redirect(url_for('admin'))
+
+@app.route('/getfile', methods=['GET'])
+@login_required
+def get_file():
+
+    # try:
+    drawingid = request.args.get('drawingid')
+    imageid = request.args.get('imageid')
+
+    image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
+    drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
+
+    with Image(filename='static/img/regular/' + image['file'] ) as img:
+        with Image(filename='static/drawings/' + drawing['file']) as drw:
+            img.resize(700, 495)
+            img.composite(drw, left=0, top=0)
+            body = img.make_blob()
+            
+    resp =  make_response(body)
+    resp.headers['Content-Disposition'] = "attachment; filename=%s.png" % drawing['file']
+    return resp
+
+    # except Exception, e:
+    #     app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
+
         
 if __name__ == '__main__':
     app.run()

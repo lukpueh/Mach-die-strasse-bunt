@@ -29,6 +29,7 @@ app.config.update(dict(
     DEBUG=True,
     SECRET_KEY='12345devel',
     UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
+    IMAGE_FOLDER=os.path.join(app.root_path, 'img/regular/'),
     REMEMBER_COOKIE_DURATION=timedelta(days=14),
     LOG_FILE=os.path.join(app.root_path, 'log/combined.log')
 ))
@@ -299,8 +300,8 @@ def get_file():
         image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
         drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
 
-        with Image(filename='static/img/regular/' + image['file'] ) as img:
-            with Image(filename='static/drawings/' + drawing['file']) as drw:
+        with Image(filename=app.config['IMAGE_FOLDER'] +  image['file'] ) as img:
+            with Image(filename=app.config['UPLOAD_FOLDER'] + drawing['file']) as drw:
                 img.resize(700, 495)
                 img.composite(drw, left=0, top=0)
                 body = img.make_blob()

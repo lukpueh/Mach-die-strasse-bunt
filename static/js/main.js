@@ -70,13 +70,20 @@ $(document).ready(function() {
     * Encrypt Email script- Please keep notice intact
     * Tool URL: http://www.dynamicdrive.com/emailriddler/
     * **********************************************/
-    var emailriddlerarray=[108,117,107,46,112,117,101,104,114,105,110,103,101,114,64,103,109,97,105,108,46,99,111,109]
-    var encryptedemail_id79='' //variable to contain encrypted email 
+    var emailriddlerarray=[104,111,115,116,109,97,115,116,101,114,64,109,97,99,104,100,105,101,115,116,114,97,115,115,101,98,117,110,116,46,99,111,109]
+    var encryptedemail_id65='' //variable to contain encrypted email 
     for (var i=0; i<emailriddlerarray.length; i++)
-      encryptedemail_id79+=String.fromCharCode(emailriddlerarray[i])
+     encryptedemail_id65+=String.fromCharCode(emailriddlerarray[i])
 
-    $('#mailLink').attr('href', 'mailto:' + encryptedemail_id79 );
-    //--- VARIABLE "encryptedemail_id79" NOW CONTAINS YOUR ENCRYPTED EMAIL. USE AS DESIRED. ---// 
+    $('#mailMaster').attr('href', 'mailto:' + encryptedemail_id65 );
+
+  var emailriddlerarray=[105,110,102,111,64,109,97,99,104,100,105,101,115,116,114,97,115,115,101,98,117,110,116,46,99,111,109]
+  var encryptedemail_id23='' //variable to contain encrypted email 
+  for (var i=0; i<emailriddlerarray.length; i++)
+   encryptedemail_id23+=String.fromCharCode(emailriddlerarray[i])
+
+    $('#mailInfo').attr('href', 'mailto:' + encryptedemail_id23 );
+
 
 	/*
 	 * Change image

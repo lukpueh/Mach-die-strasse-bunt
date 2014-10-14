@@ -181,6 +181,7 @@ ul {
   margin-bottom: 5px;
   background: white;
   font-size: 0.7em;
+  padding: 0 5px;
 }
 
 #sidebarImages {
@@ -238,6 +239,10 @@ ul {
   float: right;
   margin: 3px 10px 2px 0;
   font-size: 0.7em;
+}
+
+#footer span a {
+  margin-right: 10px;
 }
 
 

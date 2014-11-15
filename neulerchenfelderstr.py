@@ -159,7 +159,7 @@ def internal_server_error(e):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    app.logger.error("%s: Page Not Found: %s", request.remote_addr, str(e))
+    app.logger.error("%s: Page not Found: %s", request.remote_addr, request.path)
     return render_template('404.html'), 404
 
 @app.route('/')

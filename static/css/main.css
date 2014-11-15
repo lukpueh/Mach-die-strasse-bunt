@@ -122,47 +122,32 @@ ul {
   height: 70px;
   width: 100px;
   line-height: 70px;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-.nav li {
-    margin: 0 40px 0 40px;
-}
-.nav li a, 
-.nav li a:visited, 
-.nav li a:active, 
-.nav li a:hover, 
-.nav li a:focus {
   color: white;
   font-size: 0.9em;
 }
+.nav li {
+    margin: 0 40px;
+}
 
 .nav li:last-of-type {
-  margin: 5px;
+  margin: 0 5px;
   position: absolute;
   right: 0;
-  top: 0; 
 }
 .nav li:last-of-type a {
   line-height: normal;
   color: black;
   font-size: 0.7em;
-  height: initial;
 }
 
+.btnNav {background-position: -100px 0;}
+:active.btnNav, :hover.btnNav, .active.btnNav {background-position: 0 0;}
 
-
-:active#btnDraw, :hover#btnDraw, .active#btnDraw { background-image: url(../img/bg_btn_draw.png);}
-:active#btnGallery, :hover#btnGallery, .active#btnGallery {background-image: url(../img/bg_btn_gallery.png);}
-:active#btnInfo, :hover#btnInfo, .active#btnInfo  {background-image: url(../img/bg_btn_info.png);}
-:active#btnAdmin, :hover#btnAdmin, .active#btnAdmin {background-image: url(../img/bg_btn_admin.png);}
-:active#btnLogin, :hover#btnLogin, .active#btnLogin  {background-image: url(../img/bg_btn_login.png);height: 47px; width: 30px;}
-
-#btnDraw { background-image: url(../img/bg_btn_draw_inactive.png);}
-#btnGallery {background-image: url(../img/bg_btn_gallery_inactive.png);}
-#btnInfo {background-image: url(../img/bg_btn_info_inactive.png);}
-#btnAdmin {background-image: url(../img/bg_btn_admin_inactive.png);}
-#btnLogin {background-image: url(../img/bg_btn_login_inactive.png);height: 47px; width: 30px;}
+#btnDraw { background-image: url(../img/bg_btn_draw_roll.png);}
+#btnGallery {background-image: url(../img/bg_btn_gallery_roll.png);}
+#btnInfo {background-image: url(../img/bg_btn_info_roll.png);}
+#btnAdmin {background-image: url(../img/bg_btn_admin_roll.png);}
+#btnLogin {background-image: url(../img/bg_btn_login_roll.png);}
 
 
 /* Sidebar */

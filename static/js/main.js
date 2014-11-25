@@ -175,5 +175,4 @@ $(document).ready(function() {
       <input type='text' name='creatorMail' placeholder='Email Adresse'> \
       <a id='drawingSaveBtn' href='javascript:saveDrawing();' class='btn'>Speichern</a>");
     });
-
 });

@@ -19,7 +19,7 @@ a.nrm, a:visited.nrm, a:active.nrm{
 }
 
 a:hover.nrm, a:focus.nrm {
-  font-style: italic;
+  text-decoration: none;
 }
 
 h1 {font-size: 1.3em; margin: 13px 0px;}
@@ -40,14 +40,15 @@ p {font-size: 0.8em; margin: 10px 0px;}
   width: 100%;
   height: 540px;
   margin: 10px 0 10px 0;
-
+  position: relative;
 }
 
 .noScriptContent {
-  width: 100%;
-  height: 540px;
-  margin-top: 10px;
   display: none;
+}
+
+.scriptContent {
+  height: 100%;
 }
 
 .textContainer {
@@ -57,7 +58,8 @@ p {font-size: 0.8em; margin: 10px 0px;}
   -webkit-transform: rotate(-12deg);
   transform: rotate(-12deg);
   height: inherit;
-  position: relative;
+  position: absolute;
+  background-color: white;
   top: 45px;
   left: 250px;
   width: 360px;
@@ -133,6 +135,7 @@ ul {
   margin: 0 5px;
   position: absolute;
   right: 0;
+  top: 0;
 }
 .nav li:last-of-type a {
   line-height: normal;
@@ -220,14 +223,15 @@ ul {
   height: 20px;
   bottom: 0;
 }
-#footer span {
-  float: right;
-  margin: 3px 10px 2px 0;
+#footer ul {
+  padding-top: 4px;
   font-size: 0.7em;
+  text-align: right;
 }
 
-#footer span a {
-  margin-right: 10px;
+#footer ul li {
+  display: inline-block;
+  padding: 0 5px 0 5px;
 }
 
 
@@ -274,4 +278,5 @@ ul {
 }
 
 
+/* Impressum */
 

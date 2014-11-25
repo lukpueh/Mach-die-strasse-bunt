@@ -54,27 +54,25 @@
         </ul>
     </div>
 
-  <noscript>
-    <style type="text/css">
-      .content {display: none;}
-      .noScriptContent {display: block;}
-    </style>
-  </noscript>
-
-  <div class="noScriptContent">
-        <div class="textContainer">
-            <p>Diese Seite benötigt JavaScript. Bitte aktiviere es in deinen Browser Einstellungen. </p>
-        </div>
-  </div>
+    <noscript>
+        <style type="text/css">
+          .scriptContent {display: none;}
+          .noScriptContent {display: block;}
+        </style>
+    </noscript>
 
   <div class="content">
+  <div class="noScriptContent textContainer">
+      <p>Diese Seite benötigt JavaScript. Bitte aktiviere es in deinen Browser-Einstellungen! </p>
+  </div>
       {% block body %}{% endblock %}
   </div>
   <div id="footer" class="border">
-    <span>
-        kontakt: <a href="#" class="nrm" id="mailInfo">Kunstverein Salon Sichtbar</a>
-        kontakt: <a href="#" class="nrm" id="mailMaster">webmaster</a>
-    </span>
+    <ul>
+        <li>kontakt: <a href="#" class="nrm" id="mailInfo">Kunstverein Salon Sichtbar</a></li>
+        <li>kontakt: <a href="#" class="nrm" id="mailMaster">webmaster</a></li>
+        <li><a href="{{ url_for('impressum') }}" class="nrm">impressum</a></li>
+    </ul>
   </div>
 </div>
 <div id="dialog-overlay"></div>

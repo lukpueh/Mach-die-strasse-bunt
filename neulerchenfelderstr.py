@@ -180,6 +180,10 @@ def gallery():
 def info():
     return render_template('info.html')
 
+@app.route('/impressum')
+def impressum():
+    return render_template('impressum.html')
+
 @app.route('/admin')
 @login_required
 def admin():

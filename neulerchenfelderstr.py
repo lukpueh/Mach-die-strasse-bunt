@@ -27,6 +27,7 @@ app.config.from_object(__name__)
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'neulerchenfelderstr.db'),
     DEBUG=True,
+    USE_PIWIK=False,
     SECRET_KEY='12345devel',
     UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
     IMAGE_FOLDER=os.path.join(app.root_path, 'static/img/regular/'),

@@ -4,3 +4,4 @@ venv
 static/drawings/*
 *.db
 log/*
+instance/*

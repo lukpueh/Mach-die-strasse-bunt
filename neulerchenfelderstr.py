@@ -20,7 +20,7 @@ from wand.image import Image
 """ CONFIGURATION """
 #####################
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__, static_url_path='', instance_relative_config=True)
 app.config.from_object(__name__)
 
 # Load default config and override config from an environment variable
@@ -35,6 +35,8 @@ app.config.update(dict(
     LOG_FILE=os.path.join(app.root_path, 'log/combined.log')
 ))
 
+app.config.from_pyfile('config.py')
+
 # Login Config
 login_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 login_manager = LoginManager()
@@ -46,10 +48,6 @@ file_handler = RotatingFileHandler(app.config['LOG_FILE'])
 file_handler.setLevel(logging.WARNING)
 file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s in %(funcName)s: %(message)s'))
 app.logger.addHandler(file_handler)
-
-# DON'T forget to set the envvar!!!
-app.config.from_envvar('NEULERCHENFELDERSTR_PROD_CFG', silent=True)
-
 
 
 ################

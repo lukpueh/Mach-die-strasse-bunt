@@ -28,7 +28,7 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'neulerchenfelderstr.db'),
     DEBUG=True,
     USE_PIWIK=False,
-    SECRET_KEY='12345devel',
+    SECRET_KEY='12345devel', # Wow, you discovered a secret key. Good for you! This get's overriden anyways. :P
     UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
     IMAGE_FOLDER=os.path.join(app.root_path, 'static/img/regular/'),
     REMEMBER_COOKIE_DURATION=timedelta(days=14),

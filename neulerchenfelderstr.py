@@ -7,13 +7,11 @@ import logging
 from logging.handlers import RotatingFileHandler
 from datetime import timedelta
 from time import time
-from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash, jsonify, make_response
-from flask_login import (LoginManager, login_required, login_user, 
+from flask import (Flask, request, session, g, redirect, url_for, abort,
+     render_template, flash, jsonify, make_response, send_from_directory)
+from flask_login import (LoginManager, login_required, login_user,
                          current_user, logout_user, UserMixin)
-from itsdangerous import URLSafeTimedSerializer
-from werkzeug.security import generate_password_hash, \
-     check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from wand.image import Image
 
 #####################
@@ -38,10 +36,9 @@ app.config.update(dict(
 app.config.from_pyfile('config.py')
 
 # Login Config
-login_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 login_manager = LoginManager()
-login_manager.login_view = "/login"
-login_manager.setup_app(app)
+login_manager.login_view = "login"
+login_manager.init_app(app)
 
 # Logger
 file_handler = RotatingFileHandler(app.config['LOG_FILE'])
@@ -108,14 +105,10 @@ class User(UserMixin):
         self.shortname = shortname
         self.name = name
         self.password = password
- 
-    def get_auth_token(self):
-        data = [str(self.shortname), self.password]
-        return login_serializer.dumps(data)
 
     def get_id(self):
         return unicode(self.shortname)
- 
+
     @staticmethod
     def get(name):
         user = query_db('SELECT shortname, name, password FROM users WHERE shortname = ?', [name], True)
@@ -136,18 +129,7 @@ def check_password(user, password):
 def load_user(shortname):
     return User.get(shortname)
 
-@login_manager.token_loader
-def load_token(token):
-    max_age = app.config["REMEMBER_COOKIE_DURATION"].total_seconds()
-    #Decrypt the Security Token, data = [username, hashpass] and get user
-    data = login_serializer.loads(token, max_age=max_age)
-    user = User.get(data[0])
 
-    #Check Password and return user or None
-    if user and check_password(user, data[1]):
-        return user
-    return None
-    
 #############
 """ VIEWS """
 #############
@@ -192,7 +174,7 @@ def admin():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        user = User.get(request.form['username'])        
+        user = User.get(request.form['username'])
         if user and check_password(user, request.form['password']):
             login_user(user, remember=True)
             return redirect(url_for('admin'))
@@ -219,7 +201,7 @@ def change_image():
         res['imagefile'] = url_for('static', filename='img/regular/' + image['file'] )
 
         if (drawingid is not None):
-            if current_user.is_authenticated():
+            if current_user.is_authenticated:
                 drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
             else:
                 drawing = query_db('SELECT file FROM drawings WHERE is_approved = 1 AND id = ?', [drawingid], one=True)
@@ -232,7 +214,7 @@ def change_image():
 
 @app.route('/savedrawing', methods=['POST'])
 def save_drawing():
-    """Receives a base64 String (the drawing) and the email address of the drawer, 
+    """Receives a base64 String (the drawing) and the email address of the drawer,
     validates them and saves them to DB."""
 
     try:

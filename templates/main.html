@@ -45,7 +45,7 @@
           <li><a id="btnGallery" class="btnNav {{ '%s' % 'active' if request.path == '/gallery' }}" href="{{ url_for('gallery') }}">Galerie</a></li>
           <li><a id="btnInfo" class="btnNav {{ '%s' % 'active' if request.path == '/info' }}" href="{{ url_for('info') }}">Infos</a></li>
           <!-- only show if logged in -->
-          {% if current_user.is_authenticated() %}
+          {% if current_user.is_authenticated %}
           <li><a id="btnAdmin" class="btnNav {{ '%s' % 'active' if request.path == '/admin' }}" href="{{ url_for('admin') }}">Admin</a></li>
           <li ><a class="nrm" href="{{ url_for('logout') }}">{{current_user.name}} abmelden</a></li>
           {% else %}

@@ -2,6 +2,7 @@
 """ IMPORTS """
 #####################
 import os
+
 import sqlite3
 import logging
 from logging.handlers import RotatingFileHandler
@@ -26,11 +27,9 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'neulerchenfelderstr.db'),
     DEBUG=True,
     USE_PIWIK=False,
-    SECRET_KEY='12345devel', # Wow, you discovered a secret key. Good for you! This get's overriden anyways. :P
-    UPLOAD_FOLDER=os.path.join(app.root_path, 'static/drawings/'),
-    IMAGE_FOLDER=os.path.join(app.root_path, 'static/img/regular/'),
-    REMEMBER_COOKIE_DURATION=timedelta(days=14),
-    LOG_FILE=os.path.join(app.root_path, 'log/combined.log')
+    SECRET_KEY='12345devel', # Wow, you discovered a secret key. Good for you! This is overridden anyways. :P
+    UPLOAD_FOLDER='drawings',
+    IMAGE_FOLDER='img/regular'
 ))
 
 app.config.from_pyfile('config.py')
@@ -198,14 +197,18 @@ def change_image():
         imageid = request.args.get('imageid')
 
         image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
-        res['imagefile'] = url_for('static', filename='img/regular/' + image['file'] )
+        res['imagefile'] = url_for('static',
+                filename=os.path.join(
+                app.config["IMAGE_FOLDER"], image['file']))
 
         if (drawingid is not None):
             if current_user.is_authenticated:
                 drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
             else:
                 drawing = query_db('SELECT file FROM drawings WHERE is_approved = 1 AND id = ?', [drawingid], one=True)
-            res['drawingfile'] = url_for('static', filename='drawings/' + drawing['file'] )
+
+            res['drawingfile'] = url_for('static', filename=os.path.join(
+                    app.config["UPLOAD_FOLDER"], drawing['file']))
 
     except Exception, e:
         app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
@@ -237,11 +240,11 @@ def save_drawing():
         if base64List[0] == 'data:image/png;base64' and base64List[1] > 0:
             timestamp = time()
             filename = str(timestamp).replace('.', '_')
-            with open(app.config['UPLOAD_FOLDER'] + filename, 'wb') as f:
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as f:
                 f.write(base64List[1].decode('base64'))
 
             insert_db('INSERT INTO drawings(file, ts_created, image, creator_mail) VALUES(?,?,?,?)', [filename, timestamp, imageid, creatorMail])
-    
+
     except Exception, e:
         app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
         return jsonify(kind = "error")
@@ -285,8 +288,8 @@ def get_file():
         image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
         drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
 
-        with Image(filename=app.config['IMAGE_FOLDER'] +  image['file'] ) as img:
-            with Image(filename=app.config['UPLOAD_FOLDER'] + drawing['file']) as drw:
+        with Image(filename=os.path.join("static", app.config['IMAGE_FOLDER'], image['file'])) as img:
+            with Image(filename=os.path.join(app.config['UPLOAD_FOLDER'], drawing['file'])) as drw:
                 img.resize(700, 495)
                 img.composite(drw, left=0, top=0)
                 body = img.make_blob()
@@ -298,6 +301,23 @@ def get_file():
     except Exception, e:
         app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
 
-        
+
+@app.route('/drawings/<path:filename>')
+def drawings(filename):
+    drawing = query_db('SELECT is_approved FROM drawings WHERE file = ?',
+            [filename], one=True)
+
+    if (drawing is not None and
+            (drawing["is_approved"] or current_user.is_authenticated)):
+
+        return send_from_directory(
+            app.config['UPLOAD_FOLDER'],
+            filename
+        )
+
+    else:
+        abort(404)
+
+
 if __name__ == '__main__':
     app.run()

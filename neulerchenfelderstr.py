@@ -29,7 +29,8 @@ app.config.update(dict(
     USE_PIWIK=False,
     SECRET_KEY='12345devel', # Wow, you discovered a secret key. Good for you! This is overridden anyways. :P
     UPLOAD_FOLDER='drawings',
-    IMAGE_FOLDER='img/regular'
+    IMAGE_FOLDER='img/regular',
+    LOG_FILE=os.path.join(app.root_path, 'log/neulerchenfelderstr.log')
 ))
 
 app.config.from_pyfile('config.py')

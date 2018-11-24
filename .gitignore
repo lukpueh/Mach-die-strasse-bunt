@@ -1,6 +1,8 @@
 .DS_Store
 venv
 *.pyc
+log/*
+!log/.keep
 drawings/*
 !drawings/.keep
 *.db

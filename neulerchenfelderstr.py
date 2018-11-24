@@ -240,7 +240,8 @@ def save_drawing():
         if base64List[0] == 'data:image/png;base64' and base64List[1] > 0:
             timestamp = time()
             filename = str(timestamp).replace('.', '_')
-            with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as f:
+            with open(os.path.join(app.root_path,
+                    app.config['UPLOAD_FOLDER'], filename), 'wb') as f:
                 f.write(base64List[1].decode('base64'))
 
             insert_db('INSERT INTO drawings(file, ts_created, image, creator_mail) VALUES(?,?,?,?)', [filename, timestamp, imageid, creatorMail])
@@ -288,8 +289,8 @@ def get_file():
         image = query_db('SELECT file FROM images WHERE  id = ?', [imageid], one=True)
         drawing = query_db('SELECT file FROM drawings WHERE id = ?', [drawingid], one=True)
 
-        with Image(filename=os.path.join("static", app.config['IMAGE_FOLDER'], image['file'])) as img:
-            with Image(filename=os.path.join(app.config['UPLOAD_FOLDER'], drawing['file'])) as drw:
+        with Image(filename=os.path.join(app.root_path, "static", app.config['IMAGE_FOLDER'], image['file'])) as img:
+            with Image(filename=os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], drawing['file'])) as drw:
                 img.resize(700, 495)
                 img.composite(drw, left=0, top=0)
                 body = img.make_blob()
@@ -311,7 +312,7 @@ def drawings(filename):
             (drawing["is_approved"] or current_user.is_authenticated)):
 
         return send_from_directory(
-            app.config['UPLOAD_FOLDER'],
+            os.path.join(app.root_path, app.config['UPLOAD_FOLDER']),
             filename
         )
 

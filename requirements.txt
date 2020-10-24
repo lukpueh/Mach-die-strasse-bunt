@@ -1,4 +1,4 @@
-Flask==1.0.2
-Flask-Login==0.4.1
-Wand==0.4.5 # requires MagickWand library (apt-get install libmagickwand-dev)
+Flask==1.1.2
+Flask-Login==0.5.0
+Wand==0.6.3 # requires MagickWand library (apt-get install libmagickwand-dev)
 

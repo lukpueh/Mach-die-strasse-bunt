@@ -3,7 +3,7 @@ A website that allows visitors to revive the show windows of abandoned shops in 
 
 The website is hosted at [www.machdiestrassebunt.com](http://www.machdiestrassebunt.com/)
 
-##Mach die Strasse bunt
+## Mach die Strasse bunt
 Ein Zeichenprojekt für Klein und Groß
 
 Das Projekt „Mach die Strasse bunt“ hat zum Ziel die Aufmerksamkeit auf die Problematik der Leerstände in der Neulerchenfelderstraße Wien 16. zu richten.

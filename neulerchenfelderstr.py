@@ -3,6 +3,7 @@
 #####################
 import os
 
+import base64
 import sqlite3
 import logging
 from logging.handlers import RotatingFileHandler
@@ -108,7 +109,7 @@ class User(UserMixin):
         self.password = password
 
     def get_id(self):
-        return unicode(self.shortname)
+        return self.shortname
 
     @staticmethod
     def get(name):
@@ -212,7 +213,7 @@ def change_image():
             res['drawingfile'] = url_for('static', filename=os.path.join(
                     app.config["UPLOAD_FOLDER"], drawing['file']))
 
-    except Exception, e:
+    except Exception as e:
         app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
 
     return jsonify(res)
@@ -239,16 +240,16 @@ def save_drawing():
             app.logger.warning("%s IP too long", request.remote_addr)
             creatorMail = ""
 
-        if base64List[0] == 'data:image/png;base64' and base64List[1] > 0:
+        if base64List[0] == 'data:image/png;base64' and len(base64List[1]) > 0:
             timestamp = time()
             filename = str(timestamp).replace('.', '_')
             with open(os.path.join(app.root_path,
                     app.config['UPLOAD_FOLDER'], filename), 'wb') as f:
-                f.write(base64List[1].decode('base64'))
+                f.write(base64.b64decode(base64List[1]))
 
             insert_db('INSERT INTO drawings(file, ts_created, image, creator_mail) VALUES(?,?,?,?)', [filename, timestamp, imageid, creatorMail])
 
-    except Exception, e:
+    except Exception as e:
         app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
         return jsonify(kind = "error")
     else:
@@ -266,7 +267,7 @@ def save_moderation():
 
     # Disapprove drawings that are
     for drawing in approved:
-        if unicode(drawing['id']) not in to_approve:
+        if str(drawing['id']) not in to_approve:
             to_disapprove.append(drawing['id'])
 
     len_to_approve = len(to_approve)
@@ -301,7 +302,7 @@ def get_file():
         resp.headers['Content-Disposition'] = "attachment; filename=%s.png" % drawing['file']
         return resp
 
-    except Exception, e:
+    except Exception as e:
         app.logger.error("%s: Exception: %s", request.remote_addr, str(e))
 
 

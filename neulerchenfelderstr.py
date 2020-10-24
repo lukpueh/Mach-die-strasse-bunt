@@ -41,7 +41,8 @@ login_manager.login_view = "login"
 login_manager.init_app(app)
 
 # Logger
-file_handler = RotatingFileHandler(app.config['LOG_FILE'])
+file_handler = RotatingFileHandler(
+        app.config['LOG_FILE'], maxBytes=1000000, backupCount=10)
 file_handler.setLevel(logging.WARNING)
 file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s in %(funcName)s: %(message)s'))
 app.logger.addHandler(file_handler)
